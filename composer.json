@@ -1,0 +1,28 @@
+{
+    "name": "aaron-apelt/akeneo-php-lib",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "AkeneoLib\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Aaron Apelt"
+        }
+    ],
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "laravel/pint": "^1.22",
+        "pestphp/pest": "^3.8"
+    },
+    "require": {
+        "akeneo/api-php-client": "^11.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false,
+            "pestphp/pest-plugin": true
+        }
+    }
+}
