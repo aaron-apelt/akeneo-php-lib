@@ -11,6 +11,7 @@ class SearchBuilder extends AkeneoSearchBuilder
     public function resetFilters(): self
     {
         $this->filters = [];
+
         return $this;
     }
 }

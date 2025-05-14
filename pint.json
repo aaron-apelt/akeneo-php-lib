@@ -1,0 +1,29 @@
+{
+  "preset": "laravel",
+  "rules": {
+    "declare_strict_types": true,
+    "fully_qualified_strict_types": true,
+    "global_namespace_import": {
+      "import_classes": true,
+      "import_constants": true,
+      "import_functions": true
+    },
+    "no_superfluous_elseif": true,
+    "simplified_null_return": true,
+    "simplified_if_return": true,
+    "no_alias_functions": true,
+    "no_alias_language_construct_call": true,
+    "class_attributes_separation": true,
+    "ordered_class_elements": true,
+    "ordered_interfaces": true,
+    "ordered_traits": true,
+    "ordered_types": true,
+    "self_accessor": true,
+    "single_class_element_per_statement": true,
+    "visibility_required": true,
+    "no_empty_comment": true,
+    "no_useless_else": true,
+    "switch_continue_to_break": true,
+    "assign_null_coalescing_to_coalesce_equal": true
+  }
+}

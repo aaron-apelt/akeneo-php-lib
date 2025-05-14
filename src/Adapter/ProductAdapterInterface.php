@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AkeneoLib\Adapter;
 
+use Akeneo\Pim\ApiClient\Exception\HttpException;
 use AkeneoLib\Entity\Product;
+use AkeneoLib\Exception\SerializationException;
 use Generator;
 
 interface ProductAdapterInterface
@@ -20,7 +24,8 @@ interface ProductAdapterInterface
     /**
      * Register a response handler.
      *
-     * @param callable $callback
+     * The handler function should look like this:
+     * function (array $responses) {}
      */
     public function onResponse(callable $callback): self;
 
@@ -28,8 +33,8 @@ interface ProductAdapterInterface
      * Receives all products for the given queryParameters and return them denormalized inside a Generator.
      *
      * @return Generator<Product>
-     * @throws ExceptionInterface if the serialization fails
      *
+     * @throws SerializationException if the serialization fails
      */
     public function all(array $queryParameters = []): Generator;
 
@@ -37,7 +42,7 @@ interface ProductAdapterInterface
      * Receives a product by a given identifier and denormalize it to a Product object.
      *
      * @throws HttpException if the request failed
-     * @throws ExceptionInterface if the serialization fails
+     * @throws SerializationException if the serialization fails
      */
     public function get(string $identifier): Product;
 
@@ -45,7 +50,7 @@ interface ProductAdapterInterface
      * This function normalizes the given product and adds it to a queue. The queue is only pushed to Akeneo if the
      * batch size is reached. If you use this function make sure to call push() afterward.
      *
-     * @throws ExceptionInterface if normalization of the Product failed
+     * @throws SerializationException if normalization of the Product failed
      */
     public function stage(Product $product): void;
 

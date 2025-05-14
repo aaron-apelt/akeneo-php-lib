@@ -7,14 +7,16 @@ namespace AkeneoLib\Entity;
 class Product
 {
     protected ?bool $enabled;
+
     protected ?string $family;
+
     protected ?array $categories;
+
     protected ?string $parent;
+
     protected ?Values $values;
 
-    public function __construct(protected string $identifier)
-    {
-    }
+    public function __construct(protected string $identifier) {}
 
     public function getIdentifier(): string
     {
@@ -24,6 +26,7 @@ class Product
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+
         return $this;
     }
 
@@ -35,6 +38,7 @@ class Product
     public function setEnabled(?bool $enabled): self
     {
         $this->enabled = $enabled;
+
         return $this;
     }
 
@@ -46,6 +50,7 @@ class Product
     public function setFamily(?string $family): self
     {
         $this->family = $family;
+
         return $this;
     }
 
@@ -57,6 +62,7 @@ class Product
     public function setCategories(?array $categories): self
     {
         $this->categories = $categories;
+
         return $this;
     }
 
@@ -68,6 +74,7 @@ class Product
     public function setParent(?string $parent): self
     {
         $this->parent = $parent;
+
         return $this;
     }
 
@@ -84,15 +91,17 @@ class Product
     public function setValues(?Values $values): self
     {
         $this->values = $values;
+
         return $this;
     }
 
     public function upsertValue(Value $value): self
     {
-        if (!isset($this->values)) {
-            $this->setValues(new Values());
+        if (! isset($this->values)) {
+            $this->setValues(new Values);
         }
         $this->values->upsert($value);
+
         return $this;
     }
 }
