@@ -3,7 +3,8 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "AkeneoLib\\": "src/"
+            "AkeneoLib\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "authors": [
