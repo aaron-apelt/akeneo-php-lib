@@ -18,5 +18,5 @@ interface SerializerInterface
      *
      * @throws SerializationException
      */
-    public function normalize(object $data): array;
+    public function normalize(array|object $data): array;
 }

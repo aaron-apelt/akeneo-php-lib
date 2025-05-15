@@ -7,6 +7,7 @@ namespace AkeneoLib\Adapter;
 use Akeneo\Pim\ApiClient\Exception\HttpException;
 use AkeneoLib\Entity\Product;
 use AkeneoLib\Exception\SerializationException;
+use AkeneoLib\Search\QueryParameter;
 use Generator;
 
 interface ProductAdapterInterface
@@ -25,7 +26,7 @@ interface ProductAdapterInterface
      * Register a response handler.
      *
      * The handler function should look like this:
-     * function (array $responses) {}
+     * function (\Traversable $responses, array $upsertedObjects, \DateTimeImmutable $dateTime) {}
      */
     public function onResponse(callable $callback): self;
 
@@ -36,7 +37,7 @@ interface ProductAdapterInterface
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(array $queryParameters = []): Generator;
+    public function all(QueryParameter $queryParameters = new QueryParameter): Generator;
 
     /**
      * Receives a product by a given identifier and denormalize it to a Product object.
