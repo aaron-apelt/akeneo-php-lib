@@ -20,6 +20,17 @@
     "require": {
         "akeneo/api-php-client": "^11.4"
     },
+    "scripts": {
+        "lint" : ["pint"],
+        "analysis": ["phpstan analyse src -l 5"],
+        "test:lint" : ["pint --test"],
+        "test:unit" : ["pest"],
+        "test" : [
+            "@test:lint",
+            "@test:unit",
+            "@analysis"
+        ]
+    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": false,
