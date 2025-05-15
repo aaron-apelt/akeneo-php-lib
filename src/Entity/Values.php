@@ -7,10 +7,13 @@ namespace AkeneoLib\Entity;
 use Generator;
 use IteratorAggregate;
 
-class Values implements IteratorAggregate
+final class Values implements IteratorAggregate
 {
-    public array $values = [];
+    private array $values = [];
 
+    /**
+     * @return Generator<Value>
+     */
     public function getIterator(): Generator
     {
         yield from $this->values;
@@ -25,7 +28,7 @@ class Values implements IteratorAggregate
 
     public function upsert(Value $value): self
     {
-        $key = $this->generateKey($value->attributeCode, $value->scope, $value->locale);
+        $key = $this->generateKey($value->getAttributeCode(), $value->getScope(), $value->getLocale());
         $this->values[$key] = $value;
 
         return $this;
