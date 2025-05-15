@@ -1,6 +1,8 @@
 {
     "name": "aaron-apelt/akeneo-php-lib",
+    "description": "An extension of the Akeneo PHP API client for easier Akeneo service development.",
     "type": "library",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "AkeneoLib\\": "src/",
