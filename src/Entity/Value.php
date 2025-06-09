@@ -7,10 +7,10 @@ namespace AkeneoLib\Entity;
 class Value
 {
     public function __construct(
-        protected string $attributeCode,
-        protected null|array|bool|float|int|string $data,
-        protected ?string $scope = null,
-        protected ?string $locale = null
+        private string $attributeCode,
+        private null|array|bool|float|int|string $data,
+        private ?string $scope = null,
+        private ?string $locale = null
     ) {}
 
     public function getAttributeCode(): string

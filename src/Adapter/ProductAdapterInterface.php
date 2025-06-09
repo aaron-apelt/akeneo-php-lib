@@ -37,7 +37,7 @@ interface ProductAdapterInterface
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(QueryParameter $queryParameters = new QueryParameter): Generator;
+    public function all(?QueryParameter $queryParameters = null): Generator;
 
     /**
      * Receives a product by a given identifier and denormalize it to a Product object.

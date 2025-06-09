@@ -14,16 +14,16 @@ use Traversable;
 
 class ProductAdapter implements ProductAdapterInterface
 {
-    protected int $batchSize = 100;
+    private int $batchSize = 100;
 
-    protected array $products = [];
+    private array $products = [];
 
     /** @var callable|null */
-    protected $responseCallback = null;
+    private $responseCallback = null;
 
     public function __construct(
-        protected readonly ProductApiInterface $productApi,
-        protected readonly SerializerInterface $serializer
+        private readonly ProductApiInterface $productApi,
+        private readonly SerializerInterface $serializer
     ) {}
 
     /**
@@ -57,9 +57,10 @@ class ProductAdapter implements ProductAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(QueryParameter $queryParameters = new QueryParameter): Generator
+    public function all(?QueryParameter $queryParameters = null): Generator
     {
-        foreach ($this->productApi->all(100, $queryParameters->toArray()) as $product) {
+        $queryParameters ??= new QueryParameter;
+        foreach ($this->productApi->all($this->batchSize, $queryParameters->toArray()) as $product) {
             yield $this->serializer->denormalize($product, Product::class);
         }
     }
@@ -93,15 +94,15 @@ class ProductAdapter implements ProductAdapterInterface
         if (! empty($this->products)) {
             $normalizedProducts = $this->serializer->normalize($this->products);
             $response = $this->productApi->upsertList($normalizedProducts);
-            $this->triggerResponseCallback($response);
+            $this->triggerResponseCallback($response, $this->products);
             $this->products = [];
         }
     }
 
-    private function triggerResponseCallback(Traversable $response): void
+    private function triggerResponseCallback(Traversable $response, array $pushedProducts): void
     {
         if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $this->products, new DateTimeImmutable);
+            call_user_func($this->responseCallback, $response, $pushedProducts, new DateTimeImmutable);
         }
     }
 }

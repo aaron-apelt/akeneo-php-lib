@@ -6,17 +6,17 @@ namespace AkeneoLib\Entity;
 
 class Product
 {
-    protected ?bool $enabled;
+    private ?bool $enabled;
 
-    protected ?string $family;
+    private ?string $family;
 
-    protected ?array $categories;
+    private ?array $categories;
 
-    protected ?string $parent;
+    private ?string $parent;
 
-    protected ?Values $values;
+    private ?Values $values;
 
-    public function __construct(protected string $identifier) {}
+    public function __construct(private string $identifier) {}
 
     public function getIdentifier(): string
     {
