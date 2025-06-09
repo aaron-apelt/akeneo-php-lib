@@ -8,28 +8,39 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        php-version: ['8.4']
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
-      - name: Cache Composer packages
+      - name: Get Composer Cache Directory
         id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
+            ${{ runner.os }}-${{ matrix.php-version }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Check code style
+      - name: Run linter checks
         run: composer test:lint
 
       - name: Run test suite
