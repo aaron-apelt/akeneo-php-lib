@@ -82,7 +82,7 @@ $adapter->onResponse(function ($response, $products, $dateTime) {
 
 ## Testing
 
-This library is tested with [Pest](https://pestphp.com/) and PHPUnit.  
+This library is tested with [Pest](https://pestphp.com/).  
 To run tests:
 
 ```bash
