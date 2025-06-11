@@ -7,7 +7,7 @@ Designed for clean domain models, batch processing, and flexible (de)serializati
 
 ## Features
 
-- **Akeneo Object Abstractions**: Simple, immutable entity models for Akeneo objects.
+- **Akeneo Object Abstractions**: Simple entity models for Akeneo objects.
 - **Adapters**: Easy-to-use adapters for batch import/export with Akeneo.
 - **Flexible Serialization**: Customizable serialization/denormalization.
 - **Querying**: Query builder for advanced product searches.
