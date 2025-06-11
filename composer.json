@@ -21,7 +21,9 @@
         "mockery/mockery": "^1.6"
     },
     "require": {
-        "akeneo/api-php-client": "^11.4"
+        "akeneo/api-php-client": "^11.4",
+        "symfony/serializer": "^7.3",
+        "symfony/property-access": "^7.3"
     },
     "scripts": {
         "lint" : ["pint"],
