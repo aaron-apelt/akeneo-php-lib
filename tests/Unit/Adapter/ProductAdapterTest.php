@@ -10,7 +10,7 @@ use AkeneoLib\Entity\Product;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
 
-function resourceCursorMock(array $items)
+function resourceCursorMock(array $items): (Mockery\LegacyMockInterface&Mockery\MockInterface)|ResourceCursorInterface
 {
     $mock = mock(ResourceCursorInterface::class);
 
