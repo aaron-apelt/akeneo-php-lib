@@ -11,7 +11,7 @@ use AkeneoLib\Serializer\SerializerInterface;
 use DateTimeImmutable;
 use Generator;
 
-class ReferenceEntityRecordRecordAdapter implements ReferenceEntityRecordAdapterInterface
+class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterface
 {
     private int $batchSize = 100;
 
