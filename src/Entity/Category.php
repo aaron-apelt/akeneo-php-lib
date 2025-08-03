@@ -6,8 +6,10 @@ namespace AkeneoLib\Entity;
 
 class Category
 {
-    private ?string $code;
+    private string $code;
+
     private ?string $parent;
+
     private ?array $labels;
 
     public function __construct(string $code, ?string $parent = null, ?array $labels = null)
@@ -25,6 +27,7 @@ class Category
     public function setCode(string $code): self
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -36,6 +39,7 @@ class Category
     public function setParent(?string $parent): self
     {
         $this->parent = $parent;
+
         return $this;
     }
 
@@ -47,6 +51,7 @@ class Category
     public function setLabels(?array $labels): self
     {
         $this->labels = $labels;
+
         return $this;
     }
 }

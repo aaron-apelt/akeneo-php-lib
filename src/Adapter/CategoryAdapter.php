@@ -34,12 +34,14 @@ class CategoryAdapter implements CategoryAdapterInterface
     public function setBatchSize(int $batchSize): self
     {
         $this->batchSize = $batchSize;
+
         return $this;
     }
 
     public function onResponse(callable $callback): self
     {
         $this->responseCallback = $callback;
+
         return $this;
     }
 
@@ -54,6 +56,7 @@ class CategoryAdapter implements CategoryAdapterInterface
     public function get(string $code): Category
     {
         $category = $this->categoryApi->get($code);
+
         return $this->serializer->denormalize($category, Category::class);
     }
 
@@ -67,7 +70,7 @@ class CategoryAdapter implements CategoryAdapterInterface
 
     public function push(): void
     {
-        if (!empty($this->categories)) {
+        if (! empty($this->categories)) {
             $normalizedCategories = $this->serializer->normalize($this->categories);
             $response = $this->categoryApi->upsertList($normalizedCategories);
             $this->triggerResponseCallback($response, $this->categories);
