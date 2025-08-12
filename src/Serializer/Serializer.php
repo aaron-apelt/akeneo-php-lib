@@ -11,10 +11,9 @@ use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer as BaseSerializer;
 use Throwable;
+use AkeneoLib\Serializer\Normalizer\ValuesNormalizer;
+use AkeneoLib\Serializer\Normalizer\ValuesDenormalizer;
 
-/**
- * A generous serializer implementation using Symfony Serializer.
- */
 class Serializer implements SerializerInterface
 {
     private BaseSerializer $serializer;
@@ -24,23 +23,22 @@ class Serializer implements SerializerInterface
         if ($serializer) {
             $this->serializer = $serializer;
         } else {
-
             $normalizers = [
-                new ArrayDenormalizer,
+                new ValuesDenormalizer(),
+                new ValuesNormalizer(),
+                new ArrayDenormalizer(),
                 new ObjectNormalizer(
                     null,
-                    new CamelCaseToSnakeCaseNameConverter,
+                    new CamelCaseToSnakeCaseNameConverter(),
                     null,
-                    new ReflectionExtractor),
+                    new ReflectionExtractor()
+                ),
             ];
 
             $this->serializer = new BaseSerializer($normalizers);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function denormalize(array $data, string $format): mixed
     {
         try {
@@ -53,9 +51,6 @@ class Serializer implements SerializerInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function normalize(array|object $data): array
     {
         try {
