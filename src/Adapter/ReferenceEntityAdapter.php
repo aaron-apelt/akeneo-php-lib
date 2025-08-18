@@ -24,7 +24,7 @@ readonly class ReferenceEntityAdapter implements ReferenceEntityAdapterInterface
     {
         $queryParameters ??= new QueryParameter;
         foreach ($this->referenceEntityApi->all($queryParameters->toArray()) as $product) {
-            yield $this->serializer->denormalize($product, ReferenceEntity::class);
+            yield $this->serializer->denormalize($product, ReferenceEntity::class, ['scopeName' => 'channel']);
         }
     }
 
@@ -35,7 +35,7 @@ readonly class ReferenceEntityAdapter implements ReferenceEntityAdapterInterface
     {
         $referenceEntity = $this->referenceEntityApi->get($code);
 
-        return $this->serializer->denormalize($referenceEntity, ReferenceEntity::class);
+        return $this->serializer->denormalize($referenceEntity, ReferenceEntity::class, ['scopeName' => 'channel']);
     }
 
     /**
@@ -43,7 +43,7 @@ readonly class ReferenceEntityAdapter implements ReferenceEntityAdapterInterface
      */
     public function upsert(ReferenceEntity $referenceEntity): void
     {
-        $normalizedReferenceEntity = $this->serializer->normalize($referenceEntity);
+        $normalizedReferenceEntity = $this->serializer->normalize($referenceEntity, ['scopeName' => 'channel']);
 
         $this->referenceEntityApi->upsert($referenceEntity->getCode(), $normalizedReferenceEntity);
     }
