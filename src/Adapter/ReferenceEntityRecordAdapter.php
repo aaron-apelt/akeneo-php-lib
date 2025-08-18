@@ -44,7 +44,7 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     {
         $queryParameters ??= new QueryParameter;
         foreach ($this->referenceEntityRecordApi->all($this->referenceEntityCode, $queryParameters->toArray()) as $product) {
-            yield $this->serializer->denormalize($product, ReferenceEntityRecord::class);
+            yield $this->serializer->denormalize($product, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
         }
     }
 
@@ -55,7 +55,7 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     {
         $product = $this->referenceEntityRecordApi->get($this->referenceEntityCode, $code);
 
-        return $this->serializer->denormalize($product, ReferenceEntityRecord::class);
+        return $this->serializer->denormalize($product, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
     }
 
     /**
@@ -75,7 +75,7 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     public function push(): void
     {
         if (! empty($this->referenceEntityRecords)) {
-            $normalizedReferenceEntityRecords = $this->serializer->normalize($this->referenceEntityRecords);
+            $normalizedReferenceEntityRecords = $this->serializer->normalize($this->referenceEntityRecords, ['scopeName' => 'channel']);
             $response = $this->referenceEntityRecordApi->upsertList($this->referenceEntityCode, $normalizedReferenceEntityRecords);
             $this->triggerResponseCallback($response, $this->referenceEntityRecords);
             $this->referenceEntityRecords = [];

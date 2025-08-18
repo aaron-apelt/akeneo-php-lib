@@ -11,12 +11,12 @@ interface SerializerInterface
     /**
      * Trys de-normalizing the given array into the provided class.
      */
-    public function denormalize(array $data, string $format): mixed;
+    public function denormalize(array $data, string $type, array $context = []): mixed;
 
     /**
      * Normalizes the given object into an array.
      *
      * @throws SerializationException
      */
-    public function normalize(array|object $data): array;
+    public function normalize(array|object $data, array $context = []): array;
 }

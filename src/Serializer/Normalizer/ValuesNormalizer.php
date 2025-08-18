@@ -1,34 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AkeneoLib\Serializer\Normalizer;
 
+use AkeneoLib\Entity\Values;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ValuesNormalizer implements NormalizerInterface
 {
-    public function normalize(mixed $object, string $format = null, array $context = []): array
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
-        if (!is_array($object)) {
-            return [];
-        }
+        $scopeName = $context['scopeName'] ?? 'scope';
 
         $normalized = [];
-        foreach ($object as $attributeCode => $values) {
-            $normalized[$attributeCode] = [];
-            foreach ($values as $value) {
-                $normalized[$attributeCode][] = [
-                    'locale' => $value['locale'] ?? null,
-                    'scope' => $value['scope'] ?? null,
-                    'data' => $value['data'] ?? null,
-                ];
-            }
+        foreach ($data as $value) {
+            $normalized[$value->getAttributeCode()][] = [
+                'locale' => $value->getLocale(),
+                $scopeName => $value->getScope(),
+                'data' => $value->getData(),
+            ];
         }
 
         return $normalized;
     }
 
-    public function supportsNormalization(mixed $data, string $format = null): bool
+    public function getSupportedTypes(?string $format): array
     {
-        return is_array($data) && !empty($data) && is_array(reset($data));
+        return [
+            Values::class => false,
+        ];
+    }
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    {
+        return $data instanceof Values;
     }
 }
