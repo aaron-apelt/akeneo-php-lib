@@ -30,7 +30,7 @@ interface CategoryAdapterInterface
     public function get(string $code): Category;
 
     /**
-     * This function normalizes the given category and adds it to a queue. The queue is only pushed to Akeneo if the
+     * Adds the category to a queue. The queue is only pushed to Akeneo if the
      * batch size is reached. If you use this function make sure to call push() afterward.
      *
      * @throws SerializationException if normalization of the Category failed

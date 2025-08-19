@@ -58,7 +58,7 @@ interface ReferenceEntityRecordAdapterInterface
     public function get(string $code): ReferenceEntityRecord;
 
     /**
-     * This function normalizes the given reference entity record and adds it to a queue. The queue is only pushed to
+     * Adds the reference entity record to a queue. The queue is only pushed to
      * Akeneo if the batch size is reached. If you use this function make sure to call push() afterward.
      *
      * @throws SerializationException if normalization of the reference entity failed

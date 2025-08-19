@@ -58,7 +58,7 @@ interface AssetAdapterInterface
     public function get(string $code): Asset;
 
     /**
-     * This function normalizes the given asset and adds it to a queue. The queue is only pushed to
+     * Adds the asset to a queue. The queue is only pushed to
      * Akeneo if the batch size is reached. If you use this function make sure to call push() afterward.
      *
      * @throws SerializationException if normalization of the asset failed
