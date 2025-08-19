@@ -30,6 +30,24 @@ class AssetAdapter implements AssetAdapterInterface
     /**
      * {@inheritDoc}
      */
+    public function getBatchSize(): int
+    {
+        return $this->batchSize;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setBatchSize(int $batchSize): self
+    {
+        $this->batchSize = $batchSize;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function onResponse(callable $callback): AssetAdapterInterface
     {
         $this->responseCallback = $callback;

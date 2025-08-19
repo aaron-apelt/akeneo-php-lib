@@ -13,6 +13,16 @@ use Generator;
 interface AssetAdapterInterface
 {
     /**
+     * Get the batch size for upserting product models.
+     */
+    public function getBatchSize(): int;
+
+    /**
+     * Set the batch size for upserting product models.
+     */
+    public function setBatchSize(int $batchSize): self;
+
+    /**
      * Register a response handler.
      *
      * The handler function should look like this:
