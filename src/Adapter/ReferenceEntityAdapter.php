@@ -23,8 +23,8 @@ readonly class ReferenceEntityAdapter implements ReferenceEntityAdapterInterface
     public function all(?QueryParameter $queryParameters = null): Generator
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->referenceEntityApi->all($queryParameters->toArray()) as $product) {
-            yield $this->serializer->denormalize($product, ReferenceEntity::class, ['scopeName' => 'channel']);
+        foreach ($this->referenceEntityApi->all($queryParameters->toArray()) as $referenceEntity) {
+            yield $this->serializer->denormalize($referenceEntity, ReferenceEntity::class, ['scopeName' => 'channel']);
         }
     }
 

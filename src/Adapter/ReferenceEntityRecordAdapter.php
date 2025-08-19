@@ -43,8 +43,8 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     public function all(?QueryParameter $queryParameters = null): Generator
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->referenceEntityRecordApi->all($this->referenceEntityCode, $queryParameters->toArray()) as $product) {
-            yield $this->serializer->denormalize($product, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
+        foreach ($this->referenceEntityRecordApi->all($this->referenceEntityCode, $queryParameters->toArray()) as $referenceEntityRecord) {
+            yield $this->serializer->denormalize($referenceEntityRecord, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
         }
     }
 
@@ -53,9 +53,9 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
      */
     public function get(string $code): ReferenceEntityRecord
     {
-        $product = $this->referenceEntityRecordApi->get($this->referenceEntityCode, $code);
+        $referenceEntityRecord = $this->referenceEntityRecordApi->get($this->referenceEntityCode, $code);
 
-        return $this->serializer->denormalize($product, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
+        return $this->serializer->denormalize($referenceEntityRecord, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
     }
 
     /**
@@ -100,10 +100,10 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
         return $this;
     }
 
-    private function triggerResponseCallback(array $response, array $pushedProducts): void
+    private function triggerResponseCallback(array $response, array $pushedReferenceEntityRecords): void
     {
         if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedProducts, new DateTimeImmutable);
+            call_user_func($this->responseCallback, $response, $pushedReferenceEntityRecords, new DateTimeImmutable);
         }
     }
 }
