@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace AkeneoLib\Adapter;
 
-use Akeneo\Pim\ApiClient\Api\AttributeApiInterface;
-use AkeneoLib\Entity\Attribute;
+use Akeneo\Pim\ApiClient\Api\AttributeGroupApiInterface;
+use AkeneoLib\Entity\AttributeGroup;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
 use DateTimeImmutable;
 use Generator;
 use Traversable;
 
-class AttributeAdapter implements AttributeAdapterInterface
+class AttributeGroupAdapter implements AttributeGroupAdapterInterface
 {
     private int $batchSize = 100;
 
-    private array $attributes = [];
+    private array $attributeGroups = [];
 
     /** @var callable|null */
     private $responseCallback = null;
 
     public function __construct(
-        private readonly AttributeApiInterface $attributeApi,
+        private readonly AttributeGroupApiInterface $attributeGroupApi,
         private readonly SerializerInterface $serializer
     ) {}
 
@@ -60,28 +60,28 @@ class AttributeAdapter implements AttributeAdapterInterface
     public function all(?QueryParameter $queryParameters = null): Generator
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->attributeApi->all($this->batchSize, $queryParameters->toArray()) as $attribute) {
-            yield $this->serializer->denormalize($attribute, Attribute::class);
+        foreach ($this->attributeGroupApi->all($this->batchSize, $queryParameters->toArray()) as $group) {
+            yield $this->serializer->denormalize($group, AttributeGroup::class);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get(string $code): Attribute
+    public function get(string $code): AttributeGroup
     {
-        $attribute = $this->attributeApi->get($code);
+        $group = $this->attributeGroupApi->get($code);
 
-        return $this->serializer->denormalize($attribute, Attribute::class);
+        return $this->serializer->denormalize($group, AttributeGroup::class);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function stage(Attribute $attribute): void
+    public function stage(AttributeGroup $attributeGroup): void
     {
-        $this->attributes[] = $attribute;
-        if (count($this->attributes) >= $this->batchSize) {
+        $this->attributeGroups[] = $attributeGroup;
+        if (count($this->attributeGroups) >= $this->batchSize) {
             $this->push();
         }
     }
@@ -91,18 +91,18 @@ class AttributeAdapter implements AttributeAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->attributes)) {
-            $normalizedAttributes = $this->serializer->normalize($this->attributes);
-            $response = $this->attributeApi->upsertList($normalizedAttributes);
-            $this->triggerResponseCallback($response, $this->attributes);
-            $this->attributes = [];
+        if (! empty($this->attributeGroups)) {
+            $normalized = $this->serializer->normalize($this->attributeGroups);
+            $response = $this->attributeGroupApi->upsertList($normalized);
+            $this->triggerResponseCallback($response, $this->attributeGroups);
+            $this->attributeGroups = [];
         }
     }
 
-    private function triggerResponseCallback(Traversable $response, array $pushedAttributes): void
+    private function triggerResponseCallback(Traversable $response, array $pushedItems): void
     {
         if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedAttributes, new DateTimeImmutable);
+            call_user_func($this->responseCallback, $response, $pushedItems, new DateTimeImmutable);
         }
     }
 }

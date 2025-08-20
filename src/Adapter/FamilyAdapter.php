@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace AkeneoLib\Adapter;
 
-use Akeneo\Pim\ApiClient\Api\AttributeApiInterface;
-use AkeneoLib\Entity\Attribute;
+use Akeneo\Pim\ApiClient\Api\FamilyApiInterface;
+use AkeneoLib\Entity\Family;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
 use DateTimeImmutable;
 use Generator;
 use Traversable;
 
-class AttributeAdapter implements AttributeAdapterInterface
+class FamilyAdapter implements FamilyAdapterInterface
 {
     private int $batchSize = 100;
 
-    private array $attributes = [];
+    private array $families = [];
 
     /** @var callable|null */
     private $responseCallback = null;
 
     public function __construct(
-        private readonly AttributeApiInterface $attributeApi,
+        private readonly FamilyApiInterface $familyApi,
         private readonly SerializerInterface $serializer
     ) {}
 
@@ -60,28 +60,28 @@ class AttributeAdapter implements AttributeAdapterInterface
     public function all(?QueryParameter $queryParameters = null): Generator
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->attributeApi->all($this->batchSize, $queryParameters->toArray()) as $attribute) {
-            yield $this->serializer->denormalize($attribute, Attribute::class);
+        foreach ($this->familyApi->all($this->batchSize, $queryParameters->toArray()) as $family) {
+            yield $this->serializer->denormalize($family, Family::class);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get(string $code): Attribute
+    public function get(string $code): Family
     {
-        $attribute = $this->attributeApi->get($code);
+        $family = $this->familyApi->get($code);
 
-        return $this->serializer->denormalize($attribute, Attribute::class);
+        return $this->serializer->denormalize($family, Family::class);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function stage(Attribute $attribute): void
+    public function stage(Family $family): void
     {
-        $this->attributes[] = $attribute;
-        if (count($this->attributes) >= $this->batchSize) {
+        $this->families[] = $family;
+        if (count($this->families) >= $this->batchSize) {
             $this->push();
         }
     }
@@ -91,18 +91,18 @@ class AttributeAdapter implements AttributeAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->attributes)) {
-            $normalizedAttributes = $this->serializer->normalize($this->attributes);
-            $response = $this->attributeApi->upsertList($normalizedAttributes);
-            $this->triggerResponseCallback($response, $this->attributes);
-            $this->attributes = [];
+        if (! empty($this->families)) {
+            $normalizedFamilies = $this->serializer->normalize($this->families);
+            $response = $this->familyApi->upsertList($normalizedFamilies);
+            $this->triggerResponseCallback($response, $this->families);
+            $this->families = [];
         }
     }
 
-    private function triggerResponseCallback(Traversable $response, array $pushedAttributes): void
+    private function triggerResponseCallback(Traversable $response, array $pushedFamilies): void
     {
         if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedAttributes, new DateTimeImmutable);
+            call_user_func($this->responseCallback, $response, $pushedFamilies, new DateTimeImmutable);
         }
     }
 }

@@ -13,12 +13,12 @@ use Generator;
 interface ReferenceEntityRecordAdapterInterface
 {
     /**
-     * Get the batch size for upserting products.
+     * Get the batch size for upserting reference entity records.
      */
     public function getBatchSize(): int;
 
     /**
-     * Set the batch size for upserting products.
+     * Set the batch size for upserting reference entity records.
      */
     public function setBatchSize(int $batchSize): self;
 
@@ -26,7 +26,7 @@ interface ReferenceEntityRecordAdapterInterface
      * Register a response handler.
      *
      * The handler function should look like this:
-     * function (array $responses, array $upsertedObjects, \DateTimeImmutable $dateTime) {}
+     * function (\Traversable $responses, array $upsertedObjects, \DateTimeImmutable $dateTime) {}
      */
     public function onResponse(callable $callback): self;
 
