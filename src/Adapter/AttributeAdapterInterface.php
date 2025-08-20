@@ -51,7 +51,7 @@ interface AttributeAdapterInterface
      * Adds the attribute to a queue. The queue is only pushed to Akeneo if the
      * batch size is reached. If you use this function make sure to call push() afterward.
      *
-     * @throws SerializationException if normalization of the Product failed
+     * @throws SerializationException if normalization of the Attribute failed
      */
     public function stage(Attribute $attribute): void;
 

@@ -37,7 +37,7 @@ class ProductModelAdapter implements ProductModelAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function setBatchSize(int $batchSize): ProductModelAdapterInterface
+    public function setBatchSize(int $batchSize): self
     {
         $this->batchSize = $batchSize;
 
@@ -47,7 +47,7 @@ class ProductModelAdapter implements ProductModelAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function onResponse(callable $callback): ProductModelAdapterInterface
+    public function onResponse(callable $callback): self
     {
         $this->responseCallback = $callback;
 

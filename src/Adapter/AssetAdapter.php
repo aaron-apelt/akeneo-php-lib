@@ -48,7 +48,7 @@ class AssetAdapter implements AssetAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function onResponse(callable $callback): AssetAdapterInterface
+    public function onResponse(callable $callback): self
     {
         $this->responseCallback = $callback;
 
@@ -66,7 +66,7 @@ class AssetAdapter implements AssetAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function setAssetFamilyCode(string $code): AssetAdapterInterface
+    public function setAssetFamilyCode(string $code): self
     {
         $this->assetFamilyCode = $code;
 

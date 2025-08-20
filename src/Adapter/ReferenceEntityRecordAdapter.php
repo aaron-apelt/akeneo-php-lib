@@ -48,7 +48,7 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     /**
      * {@inheritDoc}
      */
-    public function onResponse(callable $callback): ReferenceEntityRecordAdapterInterface
+    public function onResponse(callable $callback): self
     {
         $this->responseCallback = $callback;
 
@@ -111,7 +111,7 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     /**
      * {@inheritDoc}
      */
-    public function setReferenceEntityCode(string $code): ReferenceEntityRecordAdapterInterface
+    public function setReferenceEntityCode(string $code): self
     {
         $this->referenceEntityCode = $code;
 

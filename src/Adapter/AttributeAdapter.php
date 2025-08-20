@@ -37,7 +37,7 @@ class AttributeAdapter implements AttributeAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function setBatchSize(int $batchSize): AttributeAdapterInterface
+    public function setBatchSize(int $batchSize): self
     {
         $this->batchSize = $batchSize;
 
@@ -47,7 +47,7 @@ class AttributeAdapter implements AttributeAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function onResponse(callable $callback): AttributeAdapterInterface
+    public function onResponse(callable $callback): self
     {
         $this->responseCallback = $callback;
 
