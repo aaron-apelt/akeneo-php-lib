@@ -10,7 +10,7 @@ interface SerializerInterface
 {
     /**
      * Tries de-normalizing the given array into the provided class.
-     * 
+     *
      * @throws SerializationException
      */
     public function denormalize(array $data, string $type, array $context = []): mixed;
