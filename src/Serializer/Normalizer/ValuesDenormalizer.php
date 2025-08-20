@@ -21,7 +21,7 @@ class ValuesDenormalizer implements DenormalizerInterface
         $valuesObject = new Values;
         foreach ($data as $attributeCode => $values) {
             foreach ($values as $value) {
-                $valuesObject->upsert(new Value($attributeCode, $value['data'], $this->scopeName, $value['locale']));
+                $valuesObject->upsert(new Value($attributeCode, $value['data'], $value[$this->scopeName], $value['locale']));
             }
         }
 
