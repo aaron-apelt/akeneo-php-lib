@@ -16,9 +16,9 @@ class Attribute
 
     public function __construct(private string $code) {}
 
-    public function getType(): string
+    public function getType(): ?string
     {
-        return $this->type;
+        return $this->type ?? null;
     }
 
     public function setType(string $type): self
@@ -28,9 +28,9 @@ class Attribute
         return $this;
     }
 
-    public function isScopable(): bool
+    public function isScopable(): ?bool
     {
-        return $this->scopable;
+        return $this->scopable ?? null;
     }
 
     public function setScopable(bool $scopable): self
@@ -40,9 +40,9 @@ class Attribute
         return $this;
     }
 
-    public function isLocalizable(): bool
+    public function isLocalizable(): ?bool
     {
-        return $this->localizable;
+        return $this->localizable ?? null;
     }
 
     public function setLocalizable(bool $localizable): self
