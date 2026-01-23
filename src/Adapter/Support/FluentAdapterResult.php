@@ -58,11 +58,14 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
 
     public function each(callable $callback): static
     {
-        foreach ($this->items as $key => $item) {
-            $callback($item, $key);
-        }
+        $gen = function () use ($callback) {
+            foreach ($this->items as $key => $item) {
+                $callback($item, $key);
+                yield $key => $item;
+            }
+        };
 
-        return $this;
+        return new static($gen());
     }
 
     public function take(int $limit): static
