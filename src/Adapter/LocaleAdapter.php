@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\LocaleApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Locale;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -20,12 +21,16 @@ class LocaleAdapter implements LocaleAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->localeApi->all(100, $queryParameters->toArray()) as $locale) {
-            yield $this->serializer->denormalize($locale, Locale::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->localeApi->all(100, $queryParameters->toArray()) as $locale) {
+                yield $this->serializer->denormalize($locale, Locale::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

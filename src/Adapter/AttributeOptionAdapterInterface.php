@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AttributeOption;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface AttributeOptionAdapterInterface
 {
@@ -41,13 +41,13 @@ interface AttributeOptionAdapterInterface
     public function setAttributeCode(string $attributeCode): self;
 
     /**
-     * Receives all attribute options for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all attribute options for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<AttributeOption>
+     * @return FluentAdapterResult<AttributeOption>
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives an attribute option by a given code and denormalize it to an AttributeOption object.

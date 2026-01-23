@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\ReferenceEntityRecord;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface ReferenceEntityRecordAdapterInterface
 {
@@ -41,13 +41,13 @@ interface ReferenceEntityRecordAdapterInterface
     public function setReferenceEntityCode(string $code): self;
 
     /**
-     * Receives all reference entity records for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all reference entity records for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<ReferenceEntityRecord>
+     * @return FluentAdapterResult<ReferenceEntityRecord>
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives a reference entity record by a given code and denormalize it to a ReferenceEntityRecord object.

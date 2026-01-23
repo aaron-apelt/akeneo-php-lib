@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\AttributeOptionApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AttributeOption;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -74,12 +75,16 @@ class AttributeOptionAdapter implements AttributeOptionAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->attributeOptionApi->all($this->attributeCode, $this->batchSize, $queryParameters->toArray()) as $option) {
-            yield $this->serializer->denormalize($option, AttributeOption::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->attributeOptionApi->all($this->attributeCode, $this->batchSize, $queryParameters->toArray()) as $option) {
+                yield $this->serializer->denormalize($option, AttributeOption::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

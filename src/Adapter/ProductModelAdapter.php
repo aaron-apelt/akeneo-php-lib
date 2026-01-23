@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\ProductModelApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\ProductModel;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -57,12 +58,16 @@ class ProductModelAdapter implements ProductModelAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->productModelApi->all($this->batchSize, $queryParameters->toArray()) as $productModel) {
-            yield $this->serializer->denormalize($productModel, ProductModel::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->productModelApi->all($this->batchSize, $queryParameters->toArray()) as $productModel) {
+                yield $this->serializer->denormalize($productModel, ProductModel::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

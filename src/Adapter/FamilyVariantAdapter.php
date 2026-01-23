@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\FamilyVariantApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\FamilyVariant;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -57,12 +58,16 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(string $familyCode, ?QueryParameter $queryParameters = null): Generator
+    public function all(string $familyCode, ?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->familyVariantApi->all($familyCode, $this->batchSize, $queryParameters->toArray()) as $variant) {
-            yield $this->serializer->denormalize($variant, FamilyVariant::class);
-        }
+        $generator = function () use ($familyCode, $queryParameters): Generator {
+            foreach ($this->familyVariantApi->all($familyCode, $this->batchSize, $queryParameters->toArray()) as $variant) {
+                yield $this->serializer->denormalize($variant, FamilyVariant::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

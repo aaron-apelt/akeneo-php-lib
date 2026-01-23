@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AssociationType;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface AssociationTypeAdapterInterface
 {
@@ -31,13 +31,13 @@ interface AssociationTypeAdapterInterface
     public function onResponse(callable $callback): self;
 
     /**
-     * Receives all association types for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all association types for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<AssociationType>
+     * @return FluentAdapterResult<AssociationType>
      *
      * @throws SerializationException
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives an association type by a given code and denormalize it to an AssociationType object.

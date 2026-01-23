@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\ChannelApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Channel;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -57,12 +58,16 @@ class ChannelAdapter implements ChannelAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->channelApi->all($this->batchSize, $queryParameters->toArray()) as $channel) {
-            yield $this->serializer->denormalize($channel, Channel::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->channelApi->all($this->batchSize, $queryParameters->toArray()) as $channel) {
+                yield $this->serializer->denormalize($channel, Channel::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**
