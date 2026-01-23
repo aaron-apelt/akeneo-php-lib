@@ -80,6 +80,10 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
 
     public function take(int $limit): static
     {
+        if ($limit < 0) {
+            throw new InvalidArgumentException('Take limit must be non-negative.');
+        }
+
         $gen = function () use ($limit) {
             $count = 0;
             foreach ($this->items as $key => $item) {
