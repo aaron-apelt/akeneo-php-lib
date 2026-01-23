@@ -168,7 +168,7 @@ class FluentAdapterResult implements IteratorAggregate
             return $this->items;
         }
 
-        return iterator_to_array($this->items, true);
+        return iterator_to_array($this->items);
     }
 
     public function chunk(int $size): static
