@@ -9,11 +9,11 @@ use IteratorAggregate;
 use OutOfBoundsException;
 use Traversable;
 
-class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggregate
+class FluentAdapterResult implements IteratorAggregate
 {
     private iterable $items;
 
-    public function __construct(iterable $items)
+    final public function __construct(iterable $items)
     {
         $this->items = $items;
     }
