@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AkeneoLib\Adapter\Support;
 
+use InvalidArgumentException;
 use IteratorAggregate;
 use OutOfBoundsException;
 use Traversable;
@@ -85,6 +86,10 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
 
     public function skip(int $count): static
     {
+        if ($count < 0) {
+            throw new InvalidArgumentException('Skip count must be non-negative.');
+        }
+
         $gen = function () use ($count) {
             $i = 0;
             foreach ($this->items as $key => $item) {
