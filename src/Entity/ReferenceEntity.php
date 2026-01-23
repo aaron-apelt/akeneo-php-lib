@@ -26,7 +26,7 @@ class ReferenceEntity
 
     public function getLabels(): ?array
     {
-        return $this->labels;
+        return $this->labels ?? null;
     }
 
     public function setLabels(?array $labels): self
