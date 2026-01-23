@@ -47,6 +47,15 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         return new static($gen());
     }
 
+    /**
+     * Reduce the collection to a single value using a callback.
+     *
+     * WARNING: This is a terminal operation that iterates through the entire collection.
+     * When working with large datasets (e.g., API cursors), this will process all items.
+     *
+     * @param  callable  $callback  Function to reduce items: fn($carry, $item, $key)
+     * @param  mixed  $initial  Initial value for the accumulator
+     */
     public function reduce(callable $callback, mixed $initial): mixed
     {
         $acc = $initial;
@@ -140,6 +149,14 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         return $found;
     }
 
+    /**
+     * Convert the collection to an array.
+     *
+     * WARNING: This is a terminal operation that materializes the entire collection
+     * into memory. When working with large datasets (e.g., API cursors), this will
+     * load all items at once, which may cause memory issues. Use with caution on
+     * large collections.
+     */
     public function toArray(): array
     {
         if (is_array($this->items)) {
@@ -172,6 +189,34 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         return new static($gen());
     }
 
+    /**
+     * Sort the items using a comparison callback.
+     *
+     * WARNING: This is a non-lazy operation that materializes the entire collection
+     * into memory. When working with large datasets (e.g., API cursors), this will
+     * load all items at once, which may cause memory issues. Use with caution on
+     * large collections.
+     *
+     * @param  callable  $callback  Comparison function that returns <0, 0, or >0
+     */
+    public function sort(callable $callback): static
+    {
+        $arr = $this->toArray();
+        uasort($arr, $callback);
+
+        return new static($arr);
+    }
+
+    /**
+     * Filter to unique items based on the callback result or item value.
+     *
+     * WARNING: This is a non-lazy operation that materializes the entire collection
+     * into memory. When working with large datasets (e.g., API cursors), this will
+     * load all items at once, which may cause memory issues. Use with caution on
+     * large collections.
+     *
+     * @param  callable|null  $callback  Optional callback to determine uniqueness
+     */
     public function unique(?callable $callback = null): static
     {
         $result = [];
