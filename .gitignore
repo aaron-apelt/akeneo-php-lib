@@ -1,2 +1,25 @@
+# Dependencies
 /vendor/
+
+# IDE
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Testing
+.phpunit.result.cache
+.pest/
+
+# Build artifacts
+.php-cs-fixer.cache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+.coverage/
+*.coverage

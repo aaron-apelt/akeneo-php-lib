@@ -1,5 +1,9 @@
 # Akeneo PHP Lib
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/aaron-apelt/akeneo-php-lib.svg?style=flat-square)](https://packagist.org/packages/aaron-apelt/akeneo-php-lib)
+[![PHP Version Require](https://img.shields.io/packagist/php-v/aaron-apelt/akeneo-php-lib.svg?style=flat-square)](https://packagist.org/packages/aaron-apelt/akeneo-php-lib)
+[![License](https://img.shields.io/packagist/l/aaron-apelt/akeneo-php-lib.svg?style=flat-square)](https://packagist.org/packages/aaron-apelt/akeneo-php-lib)
+
 A modern, type-safe PHP library for interacting with the [Akeneo PIM API](https://api.akeneo.com/).
 Designed for clean domain models, batch processing, and flexible (de)serialization.
 
@@ -14,6 +18,13 @@ Designed for clean domain models, batch processing, and flexible (de)serializati
 - **Querying**: Query builder for advanced product searches.
 - **Batch Upserts**: Efficient upsert and callback handling for large-scale imports.
 - **Strict Types & Modern PHP**: Uses PHP 8+ features and strict typing throughout.
+
+---
+
+## Requirements
+
+- PHP 8.1 or higher
+- Composer
 
 ---
 
@@ -146,3 +157,34 @@ To run tests:
 composer install
 composer test
 ```
+
+Individual test suites:
+
+```bash
+# Run only unit tests
+composer test:unit
+
+# Run only linting check
+composer test:lint
+
+# Run only static analysis
+composer analysis
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+---
+
+## Changelog
+
+Please see [CHANGELOG.md](CHANGELOG.md) for details on what has changed.
+
+---
+
+## License
+
+The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.

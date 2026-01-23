@@ -2,7 +2,20 @@
     "name": "aaron-apelt/akeneo-php-lib",
     "description": "An extension of the Akeneo PHP API client for easier Akeneo service development.",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
+    "keywords": [
+        "akeneo",
+        "pim",
+        "api",
+        "client",
+        "ecommerce",
+        "product-information-management"
+    ],
+    "homepage": "https://github.com/aaron-apelt/akeneo-php-lib",
+    "support": {
+        "issues": "https://github.com/aaron-apelt/akeneo-php-lib/issues",
+        "source": "https://github.com/aaron-apelt/akeneo-php-lib"
+    },
     "autoload": {
         "psr-4": {
             "AkeneoLib\\": "src/",
@@ -14,16 +27,17 @@
             "name": "Aaron Apelt"
         }
     ],
+    "require": {
+        "php": "^8.1",
+        "akeneo/api-php-client": "^11.4",
+        "symfony/serializer": "^7.3",
+        "symfony/property-access": "^7.3"
+    },
     "require-dev": {
         "phpstan/phpstan": "^2.1",
         "laravel/pint": "^1.22",
         "pestphp/pest": "^3.8",
         "mockery/mockery": "^1.6"
-    },
-    "require": {
-        "akeneo/api-php-client": "^11.4",
-        "symfony/serializer": "^7.3",
-        "symfony/property-access": "^7.3"
     },
     "scripts": {
         "lint" : ["pint"],
@@ -40,6 +54,10 @@
         "allow-plugins": {
             "php-http/discovery": false,
             "pestphp/pest-plugin": true
-        }
-    }
+        },
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
