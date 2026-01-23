@@ -144,5 +144,5 @@ To run tests:
 
 ```bash
 composer install
-vendor/bin/pest
+composer test
 ```
