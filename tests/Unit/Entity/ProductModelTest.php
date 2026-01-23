@@ -13,7 +13,7 @@ describe('identifier management', function () {
     });
 
     it('can set the identifier', function () {
-        $model = new ProductModel('old_id')->setIdentifier('new_id');
+        $model = (new ProductModel('old_id'))->setIdentifier('new_id');
         expect($model->getIdentifier())->toBe('new_id');
     });
 });
@@ -25,17 +25,17 @@ describe('enabled status management', function () {
     });
 
     it('can set the enabled status to true', function () {
-        $model = new ProductModel('model')->setEnabled(true);
+        $model = (new ProductModel('model'))->setEnabled(true);
         expect($model->isEnabled())->toBeTrue();
     });
 
     it('can set the enabled status to false', function () {
-        $model = new ProductModel('model')->setEnabled(false);
+        $model = (new ProductModel('model'))->setEnabled(false);
         expect($model->isEnabled())->toBeFalse();
     });
 
     it('can set the enabled status to null', function () {
-        $model = new ProductModel('model')->setEnabled(true)->setEnabled(null);
+        $model = (new ProductModel('model'))->setEnabled(true)->setEnabled(null);
         expect($model->isEnabled())->toBeNull();
     });
 });
@@ -47,12 +47,12 @@ describe('family management', function () {
     });
 
     it('can set the family', function () {
-        $model = new ProductModel('model')->setFamily('clothing');
+        $model = (new ProductModel('model'))->setFamily('clothing');
         expect($model->getFamily())->toBe('clothing');
     });
 
     it('can set the family to null', function () {
-        $model = new ProductModel('model')->setFamily('clothing')->setFamily(null);
+        $model = (new ProductModel('model'))->setFamily('clothing')->setFamily(null);
         expect($model->getFamily())->toBeNull();
     });
 });
@@ -64,12 +64,12 @@ describe('family variant management', function () {
     });
 
     it('can set the family variant', function () {
-        $model = new ProductModel('model')->setFamilyVariant('by_size');
+        $model = (new ProductModel('model'))->setFamilyVariant('by_size');
         expect($model->getFamilyVariant())->toBe('by_size');
     });
 
     it('can set the family variant to null', function () {
-        $model = new ProductModel('model')->setFamilyVariant('by_size')->setFamilyVariant(null);
+        $model = (new ProductModel('model'))->setFamilyVariant('by_size')->setFamilyVariant(null);
         expect($model->getFamilyVariant())->toBeNull();
     });
 });
@@ -82,12 +82,12 @@ describe('categories management', function () {
 
     it('can set the categories', function () {
         $categories = ['tshirts', 'clothing'];
-        $model = new ProductModel('model')->setCategories($categories);
+        $model = (new ProductModel('model'))->setCategories($categories);
         expect($model->getCategories())->toBe($categories);
     });
 
     it('can set the categories to null', function () {
-        $model = new ProductModel('model')->setCategories(['test'])->setCategories(null);
+        $model = (new ProductModel('model'))->setCategories(['test'])->setCategories(null);
         expect($model->getCategories())->toBeNull();
     });
 });
@@ -99,12 +99,12 @@ describe('parent management', function () {
     });
 
     it('can set the parent', function () {
-        $model = new ProductModel('model')->setParent('parent_model');
+        $model = (new ProductModel('model'))->setParent('parent_model');
         expect($model->getParent())->toBe('parent_model');
     });
 
     it('can set the parent to null', function () {
-        $model = new ProductModel('model')->setParent('parent_model')->setParent(null);
+        $model = (new ProductModel('model'))->setParent('parent_model')->setParent(null);
         expect($model->getParent())->toBeNull();
     });
 });
@@ -117,12 +117,12 @@ describe('values management', function () {
 
     it('can set the values', function () {
         $values = new Values;
-        $model = new ProductModel('model')->setValues($values);
+        $model = (new ProductModel('model'))->setValues($values);
         expect($model->getValues())->toBe($values);
     });
 
     it('can set the values to null', function () {
-        $model = new ProductModel('model')->setValues(new Values)->setValues(null);
+        $model = (new ProductModel('model'))->setValues(new Values)->setValues(null);
         expect($model->getValues())->toBeNull();
     });
 });

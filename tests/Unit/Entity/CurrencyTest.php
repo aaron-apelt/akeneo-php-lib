@@ -11,7 +11,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $currency = new Currency('USD')->setCode('EUR');
+        $currency = (new Currency('USD'))->setCode('EUR');
         expect($currency->getCode())->toBe('EUR');
     });
 });
@@ -23,12 +23,12 @@ describe('enabled status management', function () {
     });
 
     it('can set enabled to true', function () {
-        $currency = new Currency('USD')->setEnabled(true);
+        $currency = (new Currency('USD'))->setEnabled(true);
         expect($currency->isEnabled())->toBeTrue();
     });
 
     it('can set enabled to false', function () {
-        $currency = new Currency('JPY')->setEnabled(false);
+        $currency = (new Currency('JPY'))->setEnabled(false);
         expect($currency->isEnabled())->toBeFalse();
     });
 });

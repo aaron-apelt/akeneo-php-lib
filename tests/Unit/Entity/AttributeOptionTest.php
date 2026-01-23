@@ -11,7 +11,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $option = new AttributeOption('old_code')->setCode('new_code');
+        $option = (new AttributeOption('old_code'))->setCode('new_code');
         expect($option->getCode())->toBe('new_code');
     });
 });
@@ -24,7 +24,7 @@ describe('labels management', function () {
 
     it('can set the labels', function () {
         $labels = ['en_US' => 'Red', 'fr_FR' => 'Rouge'];
-        $option = new AttributeOption('red')->setLabels($labels);
+        $option = (new AttributeOption('red'))->setLabels($labels);
         expect($option->getLabels())->toBe($labels);
     });
 });

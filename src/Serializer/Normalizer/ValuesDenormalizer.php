@@ -34,8 +34,13 @@ class ValuesDenormalizer implements DenormalizerInterface
             return false;
         }
 
-        return array_all($data, fn ($valueArray, $attributeCode) => $this->isAttributeCode($attributeCode) || $this->isValueArray($valueArray));
+        foreach ($data as $attributeCode => $valueArray) {
+            if (! $this->isAttributeCode($attributeCode) && ! $this->isValueArray($valueArray)) {
+                return false;
+            }
+        }
 
+        return true;
     }
 
     public function getSupportedTypes(?string $format): array
@@ -56,8 +61,13 @@ class ValuesDenormalizer implements DenormalizerInterface
             return false;
         }
 
-        return array_all($valueArray, fn ($dataArray) => $this->isDataArray($dataArray));
+        foreach ($valueArray as $dataArray) {
+            if (! $this->isDataArray($dataArray)) {
+                return false;
+            }
+        }
 
+        return true;
     }
 
     private function isDataArray(mixed $dataArray): bool

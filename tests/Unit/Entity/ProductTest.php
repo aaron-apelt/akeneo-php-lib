@@ -13,7 +13,7 @@ describe('identifier management', function () {
     });
 
     it('can set the identifier', function () {
-        $product = new Product('old_id')->setIdentifier('new_id');
+        $product = (new Product('old_id'))->setIdentifier('new_id');
         expect($product->getIdentifier())->toBe('new_id');
     });
 });
@@ -25,17 +25,17 @@ describe('enabled status management', function () {
     });
 
     it('can set the enabled status to true', function () {
-        $product = new Product('id')->setEnabled(true);
+        $product = (new Product('id'))->setEnabled(true);
         expect($product->isEnabled())->toBeTrue();
     });
 
     it('can set the enabled status to false', function () {
-        $product = new Product('id')->setEnabled(false);
+        $product = (new Product('id'))->setEnabled(false);
         expect($product->isEnabled())->toBeFalse();
     });
 
     it('can set the enabled status to null', function () {
-        $product = new Product('id')->setEnabled(true)->setEnabled(null);
+        $product = (new Product('id'))->setEnabled(true)->setEnabled(null);
         expect($product->isEnabled())->toBeNull();
     });
 });
@@ -47,12 +47,12 @@ describe('family management', function () {
     });
 
     it('can set the family', function () {
-        $product = new Product('id')->setFamily('clothing');
+        $product = (new Product('id'))->setFamily('clothing');
         expect($product->getFamily())->toBe('clothing');
     });
 
     it('can set the family to null', function () {
-        $product = new Product('id')->setFamily('electronics')->setFamily(null);
+        $product = (new Product('id'))->setFamily('electronics')->setFamily(null);
         expect($product->getFamily())->toBeNull();
     });
 });
@@ -65,12 +65,12 @@ describe('categories management', function () {
 
     it('can set the categories', function () {
         $categories = ['t-shirts', 'summer'];
-        $product = new Product('id')->setCategories($categories);
+        $product = (new Product('id'))->setCategories($categories);
         expect($product->getCategories())->toBe($categories);
     });
 
     it('can set the categories to null', function () {
-        $product = new Product('id')->setCategories(['shoes'])->setCategories(null);
+        $product = (new Product('id'))->setCategories(['shoes'])->setCategories(null);
         expect($product->getCategories())->toBeNull();
     });
 });
@@ -82,12 +82,12 @@ describe('parent management', function () {
     });
 
     it('can set the parent', function () {
-        $product = new Product('id')->setParent('master_product');
+        $product = (new Product('id'))->setParent('master_product');
         expect($product->getParent())->toBe('master_product');
     });
 
     it('can set the parent to null', function () {
-        $product = new Product('id')->setParent('another_master')->setParent(null);
+        $product = (new Product('id'))->setParent('another_master')->setParent(null);
         expect($product->getParent())->toBeNull();
     });
 });
@@ -100,12 +100,12 @@ describe('values management', function () {
 
     it('can set the values', function () {
         $values = new Values;
-        $product = new Product('id')->setValues($values);
+        $product = (new Product('id'))->setValues($values);
         expect($product->getValues())->toBe($values);
     });
 
     it('can set the values to null', function () {
-        $product = new Product('id')->setValues(new Values)->setValues(null);
+        $product = (new Product('id'))->setValues(new Values)->setValues(null);
         expect($product->getValues())->toBeNull();
     });
 });

@@ -11,7 +11,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $category = new Category('old_code')->setCode('new_code');
+        $category = (new Category('old_code'))->setCode('new_code');
         expect($category->getCode())->toBe('new_code');
     });
 });
@@ -28,12 +28,12 @@ describe('parent management', function () {
     });
 
     it('can set the parent', function () {
-        $category = new Category('child')->setParent('master');
+        $category = (new Category('child'))->setParent('master');
         expect($category->getParent())->toBe('master');
     });
 
     it('can set the parent to null', function () {
-        $category = new Category('child', 'master')->setParent(null);
+        $category = (new Category('child', 'master'))->setParent(null);
         expect($category->getParent())->toBeNull();
     });
 });
@@ -52,13 +52,13 @@ describe('labels management', function () {
 
     it('can set the labels', function () {
         $labels = ['en_US' => 'Products', 'fr_FR' => 'Produits'];
-        $category = new Category('cat')->setLabels($labels);
+        $category = (new Category('cat'))->setLabels($labels);
         expect($category->getLabels())->toBe($labels);
     });
 
     it('can set the labels to null', function () {
         $labels = ['en_US' => 'Test'];
-        $category = new Category('cat', null, $labels)->setLabels(null);
+        $category = (new Category('cat', null, $labels))->setLabels(null);
         expect($category->getLabels())->toBeNull();
     });
 });

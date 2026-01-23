@@ -3,36 +3,11 @@
 declare(strict_types=1);
 
 use Akeneo\Pim\ApiClient\Api\ProductApiInterface;
-use Akeneo\Pim\ApiClient\Pagination\ResourceCursorInterface;
 use AkeneoLib\Adapter\ProductAdapter;
 use AkeneoLib\Adapter\ProductAdapterInterface;
 use AkeneoLib\Entity\Product;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-
-function resourceCursorMock(array $items): (Mockery\LegacyMockInterface&Mockery\MockInterface)|ResourceCursorInterface
-{
-    $mock = mock(ResourceCursorInterface::class);
-
-    $mock->shouldReceive('rewind')->andReturnUsing(function () use (&$pos) {
-        $pos = 0;
-    });
-    $mock->shouldReceive('current')->andReturnUsing(function () use ($items, &$pos) {
-        return $items[$pos] ?? null;
-    });
-    $mock->shouldReceive('key')->andReturnUsing(function () use (&$pos) {
-        return $pos;
-    });
-    $mock->shouldReceive('next')->andReturnUsing(function () use (&$pos) {
-        $pos++;
-    });
-    $mock->shouldReceive('valid')->andReturnUsing(function () use ($items, &$pos) {
-        return isset($items[$pos]);
-    });
-    $mock->shouldReceive('getIterator')->andReturn(new ArrayIterator($items));
-
-    return $mock;
-}
 
 beforeEach(function () {
     $this->productApi = mock(ProductApiInterface::class);

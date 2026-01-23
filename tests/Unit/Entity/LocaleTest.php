@@ -11,7 +11,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $locale = new Locale('en_US')->setCode('fr_FR');
+        $locale = (new Locale('en_US'))->setCode('fr_FR');
         expect($locale->getCode())->toBe('fr_FR');
     });
 });
@@ -23,12 +23,12 @@ describe('enabled status management', function () {
     });
 
     it('can set enabled to true', function () {
-        $locale = new Locale('en_US')->setEnabled(true);
+        $locale = (new Locale('en_US'))->setEnabled(true);
         expect($locale->isEnabled())->toBeTrue();
     });
 
     it('can set enabled to false', function () {
-        $locale = new Locale('de_DE')->setEnabled(false);
+        $locale = (new Locale('de_DE'))->setEnabled(false);
         expect($locale->isEnabled())->toBeFalse();
     });
 });

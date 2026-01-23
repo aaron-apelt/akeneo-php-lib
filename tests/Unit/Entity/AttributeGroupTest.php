@@ -11,7 +11,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $group = new AttributeGroup('old_code')->setCode('new_code');
+        $group = (new AttributeGroup('old_code'))->setCode('new_code');
         expect($group->getCode())->toBe('new_code');
     });
 });
@@ -24,13 +24,13 @@ describe('labels management', function () {
 
     it('can set the labels', function () {
         $labels = ['en_US' => 'Technical', 'fr_FR' => 'Technique'];
-        $group = new AttributeGroup('technical')->setLabels($labels);
+        $group = (new AttributeGroup('technical'))->setLabels($labels);
         expect($group->getLabels())->toBe($labels);
     });
 
     it('can set the labels to null', function () {
         $labels = ['en_US' => 'Test'];
-        $group = new AttributeGroup('technical')->setLabels($labels)->setLabels(null);
+        $group = (new AttributeGroup('technical'))->setLabels($labels)->setLabels(null);
         expect($group->getLabels())->toBeNull();
     });
 });

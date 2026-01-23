@@ -13,7 +13,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $asset = new Asset('old_code')->setCode('new_code');
+        $asset = (new Asset('old_code'))->setCode('new_code');
         expect($asset->getCode())->toBe('new_code');
     });
 });
@@ -26,12 +26,12 @@ describe('values management', function () {
 
     it('can set the values', function () {
         $values = new Values;
-        $asset = new Asset('img-001')->setValues($values);
+        $asset = (new Asset('img-001'))->setValues($values);
         expect($asset->getValues())->toBe($values);
     });
 
     it('can set the values to null', function () {
-        $asset = new Asset('img-001')->setValues(new Values)->setValues(null);
+        $asset = (new Asset('img-001'))->setValues(new Values)->setValues(null);
         expect($asset->getValues())->toBeNull();
     });
 });

@@ -11,7 +11,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $type = new AssociationType('old_code')->setCode('new_code');
+        $type = (new AssociationType('old_code'))->setCode('new_code');
         expect($type->getCode())->toBe('new_code');
     });
 });
@@ -24,13 +24,13 @@ describe('labels management', function () {
 
     it('can set the labels', function () {
         $labels = ['en_US' => 'Cross sell', 'fr_FR' => 'Vente croisée'];
-        $type = new AssociationType('X_SELL')->setLabels($labels);
+        $type = (new AssociationType('X_SELL'))->setLabels($labels);
         expect($type->getLabels())->toBe($labels);
     });
 
     it('can set the labels to null', function () {
         $labels = ['en_US' => 'Test'];
-        $type = new AssociationType('X_SELL')->setLabels($labels)->setLabels(null);
+        $type = (new AssociationType('X_SELL'))->setLabels($labels)->setLabels(null);
         expect($type->getLabels())->toBeNull();
     });
 });

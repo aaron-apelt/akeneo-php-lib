@@ -13,7 +13,7 @@ describe('code management', function () {
     });
 
     it('can set the code', function () {
-        $record = new ReferenceEntityRecord('old_code')->setCode('new_code');
+        $record = (new ReferenceEntityRecord('old_code'))->setCode('new_code');
         expect($record->getCode())->toBe('new_code');
     });
 });
@@ -26,12 +26,12 @@ describe('values management', function () {
 
     it('can set the values', function () {
         $values = new Values;
-        $record = new ReferenceEntityRecord('nike')->setValues($values);
+        $record = (new ReferenceEntityRecord('nike'))->setValues($values);
         expect($record->getValues())->toBe($values);
     });
 
     it('can set the values to null', function () {
-        $record = new ReferenceEntityRecord('nike')->setValues(new Values)->setValues(null);
+        $record = (new ReferenceEntityRecord('nike'))->setValues(new Values)->setValues(null);
         expect($record->getValues())->toBeNull();
     });
 });
