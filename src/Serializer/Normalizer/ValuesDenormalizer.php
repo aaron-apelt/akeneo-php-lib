@@ -34,7 +34,7 @@ class ValuesDenormalizer implements DenormalizerInterface
             return false;
         }
 
-        return array_all($data, fn ($valueArray, $attributeCode) => $this->isAttributeCode($attributeCode) || $this->isValueArray($valueArray));
+        return array_all($data, fn ($valueArray, $attributeCode) => $this->isAttributeCode($attributeCode) && $this->isValueArray($valueArray));
 
     }
 
