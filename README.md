@@ -9,6 +9,7 @@ Designed for clean domain models, batch processing, and flexible (de)serializati
 
 - **Akeneo Object Abstractions**: Simple entity models for Akeneo objects.
 - **Adapters**: Easy-to-use adapters for batch import/export with Akeneo.
+- **Fluent Collections**: Powerful, lazy-evaluated collection operations.
 - **Flexible Serialization**: Customizable serialization/denormalization.
 - **Querying**: Query builder for advanced product searches.
 - **Batch Upserts**: Efficient upsert and callback handling for large-scale imports.
@@ -51,6 +52,63 @@ foreach ($adapter->all() as $product) {
     echo $product->getIdentifier();
 }
 ```
+
+### Working with Fluent Collections
+
+The `all()` method returns a `FluentAdapterResult` that supports lazy-evaluated collection operations:
+
+```php
+use AkeneoLib\Search\QueryParameter;
+
+// Chain operations - only processes items as needed
+$adapter->all()
+    ->filter(fn($product) => $product->isEnabled())
+    ->map(fn($product) => $product->getIdentifier())
+    ->take(100)
+    ->toArray();
+
+// Pagination
+$page2 = $adapter->all()
+    ->skip(50)
+    ->take(50)
+    ->toArray();
+
+// Execute side effects while maintaining chain ability
+$adapter->all()
+    ->each(fn($product) => logger()->info("Processing {$product->getIdentifier()}"))
+    ->filter(fn($product) => $product->getFamily() === 'electronics')
+    ->toArray();
+
+// Terminal operations
+$firstEnabled = $adapter->all()->first(fn($p) => $p->getEnabled());
+$lastProduct = $adapter->all()->last();
+
+// Practical reduce example - collect all identifiers
+$identifiers = $adapter->all()->reduce(
+    fn($acc, $product) => [...$acc, $product->getIdentifier()], 
+    []
+);
+```
+
+#### Available Methods
+
+**Lazy Operations** (maintain lazy evaluation):
+- `filter(callable $callback)` - Filter items
+- `map(callable $callback)` - Transform items
+- `each(callable $callback)` - Execute side effects
+- `take(int $limit)` - Limit to first N items
+- `skip(int $count)` - Skip first N items
+- `chunk(int $size)` - Split into chunks
+
+**Terminal Operations** (materialize the collection):
+- `toArray()` - Convert to array
+- `first(?callable $callback = null)` - Get first item
+- `last(?callable $callback = null)` - Get last item
+- `reduce(callable $callback, $initial)` - Reduce to single value
+- `sort(callable $callback)` - Sort items (⚠️ loads all into memory)
+- `unique(?callable $callback = null)` - Filter duplicates (⚠️ loads all into memory)
+
+**Note**: Operations marked with ⚠️ materialize the entire collection into memory. Use with caution on large datasets from API cursors.
 
 ### Upsert Products in Batches
 
