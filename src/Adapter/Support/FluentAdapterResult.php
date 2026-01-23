@@ -123,7 +123,7 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
                 }
             }
 
-            return null;
+            throw new OutOfBoundsException('No matching item found in FluentAdapterResult.');
         }
 
         $found = null;
@@ -131,6 +131,10 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
             if ($callback === null || $callback($item, $key)) {
                 $found = $item;
             }
+        }
+
+        if ($found === null) {
+            throw new OutOfBoundsException('No matching item found in FluentAdapterResult.');
         }
 
         return $found;
