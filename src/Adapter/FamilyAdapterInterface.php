@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Family;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface FamilyAdapterInterface
 {
@@ -31,13 +31,13 @@ interface FamilyAdapterInterface
     public function onResponse(callable $callback): self;
 
     /**
-     * Receives all families for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all families for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<Family>
+     * @return FluentAdapterResult<Family>
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives a family by a given code and denormalize it to a Family object.

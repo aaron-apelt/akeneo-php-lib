@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Channel;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface ChannelAdapterInterface
 {
@@ -31,13 +31,13 @@ interface ChannelAdapterInterface
     public function onResponse(callable $callback): self;
 
     /**
-     * Receives all channels for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all channels for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<Channel>
+     * @return FluentAdapterResult<Channel>
      *
      * @throws SerializationException
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives a channel by code and denormalize it to a Channel object.

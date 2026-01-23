@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\AssociationTypeApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AssociationType;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -54,12 +55,16 @@ class AssociationTypeAdapter implements AssociationTypeAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->associationTypeApi->all($this->batchSize, $queryParameters->toArray()) as $associationType) {
-            yield $this->serializer->denormalize($associationType, AssociationType::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->associationTypeApi->all($this->batchSize, $queryParameters->toArray()) as $associationType) {
+                yield $this->serializer->denormalize($associationType, AssociationType::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\ProductModel;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface ProductModelAdapterInterface
 {
@@ -31,13 +31,13 @@ interface ProductModelAdapterInterface
     public function onResponse(callable $callback): self;
 
     /**
-     * Receives all product models for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all product models for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<ProductModel>
+     * @return FluentAdapterResult<ProductModel>
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives a product model by a given code and denormalize it to a ProductModel object.

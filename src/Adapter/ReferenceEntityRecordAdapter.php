@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\ReferenceEntityRecordApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\ReferenceEntityRecord;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -58,12 +59,16 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->referenceEntityRecordApi->all($this->referenceEntityCode, $queryParameters->toArray()) as $referenceEntityRecord) {
-            yield $this->serializer->denormalize($referenceEntityRecord, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->referenceEntityRecordApi->all($this->referenceEntityCode, $queryParameters->toArray()) as $referenceEntityRecord) {
+                yield $this->serializer->denormalize($referenceEntityRecord, ReferenceEntityRecord::class, ['scopeName' => 'channel']);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

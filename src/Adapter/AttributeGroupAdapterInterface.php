@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AttributeGroup;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface AttributeGroupAdapterInterface
 {
@@ -31,16 +31,16 @@ interface AttributeGroupAdapterInterface
     public function onResponse(callable $callback): self;
 
     /**
-     * Receives all attribute groups for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all attribute groups for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<AttributeGroup>
+     * @return FluentAdapterResult<AttributeGroup>
      *
      * @throws SerializationException
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
-     * Receives an attribute grouo by a given code and denormalize it to an AttributeGroup object.
+     * Receives an attribute group by a given code and denormalize it to an AttributeGroup object.
      *
      * @throws HttpException
      * @throws SerializationException

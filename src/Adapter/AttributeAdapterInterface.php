@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Attribute;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface AttributeAdapterInterface
 {
@@ -31,13 +31,13 @@ interface AttributeAdapterInterface
     public function onResponse(callable $callback): self;
 
     /**
-     * Receives all attributes and return them denormalized inside a Generator.
+     * Receives all attributes and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<Attribute>
+     * @return FluentAdapterResult<Attribute>
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives an attribute by a given identifier and denormalize it to an Attribute object.

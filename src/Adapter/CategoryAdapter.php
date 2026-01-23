@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\CategoryApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Category;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -57,12 +58,16 @@ class CategoryAdapter implements CategoryAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->categoryApi->all($this->batchSize, $queryParameters->toArray()) as $category) {
-            yield $this->serializer->denormalize($category, Category::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->categoryApi->all($this->batchSize, $queryParameters->toArray()) as $category) {
+                yield $this->serializer->denormalize($category, Category::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\CurrencyApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Currency;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -20,12 +21,16 @@ class CurrencyAdapter implements CurrencyAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->currencyApi->all(100, $queryParameters->toArray()) as $currency) {
-            yield $this->serializer->denormalize($currency, Currency::class);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->currencyApi->all(100, $queryParameters->toArray()) as $currency) {
+                yield $this->serializer->denormalize($currency, Currency::class);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**

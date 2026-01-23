@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Exception\HttpException;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Category;
 use AkeneoLib\Exception\SerializationException;
 use AkeneoLib\Search\QueryParameter;
-use Generator;
 
 interface CategoryAdapterInterface
 {
     /**
-     * Receives all categories for the given queryParameters and return them denormalized inside a Generator.
+     * Receives all categories for the given queryParameters and return them denormalized inside a FluentAdapterResult.
      *
-     * @return Generator<Category>
+     * @return FluentAdapterResult<Category>
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(?QueryParameter $queryParameters = null): Generator;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives a category by code and denormalize it to a Category object.

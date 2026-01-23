@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AkeneoLib\Adapter;
 
 use Akeneo\Pim\ApiClient\Api\AssetManager\AssetApiInterface;
+use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Asset;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
@@ -76,12 +77,16 @@ class AssetAdapter implements AssetAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(?QueryParameter $queryParameters = null): Generator
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        foreach ($this->assetApi->all($this->assetFamilyCode, $queryParameters->toArray()) as $asset) {
-            yield $this->serializer->denormalize($asset, Asset::class, ['scopeName' => 'channel']);
-        }
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->assetApi->all($this->assetFamilyCode, $queryParameters->toArray()) as $asset) {
+                yield $this->serializer->denormalize($asset, Asset::class, ['scopeName' => 'channel']);
+            }
+        };
+
+        return new FluentAdapterResult($generator());
     }
 
     /**
