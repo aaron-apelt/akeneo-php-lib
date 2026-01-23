@@ -159,14 +159,6 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         return new static($gen());
     }
 
-    public function sort(callable $callback): static
-    {
-        $arr = $this->toArray();
-        uasort($arr, $callback);
-
-        return new static($arr);
-    }
-
     public function unique(?callable $callback = null): static
     {
         $result = [];
