@@ -178,10 +178,16 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         $seen = [];
         foreach ($this->items as $key => $item) {
             $val = $callback ? $callback($item, $key) : $item;
-            if (in_array($val, $seen, true)) {
+
+            $lookupKey = is_scalar($val) || $val === null
+                ? $val
+                : serialize($val);
+
+            if (isset($seen[$lookupKey])) {
                 continue;
             }
-            $seen[] = $val;
+
+            $seen[$lookupKey] = true;
             $result[$key] = $item;
         }
 
