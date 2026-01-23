@@ -46,7 +46,7 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         return new static($gen());
     }
 
-    public function reduce(callable $callback, $initial)
+    public function reduce(callable $callback, mixed $initial): mixed
     {
         $acc = $initial;
         foreach ($this->items as $key => $item) {
