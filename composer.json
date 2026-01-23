@@ -2,7 +2,18 @@
     "name": "aaron-apelt/akeneo-php-lib",
     "description": "An extension of the Akeneo PHP API client for easier Akeneo service development.",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
+    "keywords": [
+        "akeneo",
+        "pim",
+        "api",
+        "client",
+        "ecommerce",
+        "pim"
+    ],
+    "support": {
+        "source": "https://github.com/aaron-apelt/akeneo-php-lib"
+    },
     "autoload": {
         "psr-4": {
             "AkeneoLib\\": "src/",
@@ -21,6 +32,7 @@
         "mockery/mockery": "^1.6"
     },
     "require": {
+        "php": "^8.4",
         "akeneo/api-php-client": "^11.4",
         "symfony/serializer": "^7.3",
         "symfony/property-access": "^7.3"
