@@ -147,6 +147,10 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
 
     public function chunk(int $size): static
     {
+        if ($size < 1) {
+            throw new InvalidArgumentException('Chunk size must be at least 1.');
+        }
+
         $gen = function () use ($size) {
             $chunk = [];
             foreach ($this->items as $key => $item) {
