@@ -83,10 +83,11 @@ class FluentAdapterResult implements FluentAdapterResultInterface, IteratorAggre
         $gen = function () use ($limit) {
             $count = 0;
             foreach ($this->items as $key => $item) {
-                if ($count++ === $limit) {
+                if ($count >= $limit) {
                     break;
                 }
                 yield $key => $item;
+                $count++;
             }
         };
 
