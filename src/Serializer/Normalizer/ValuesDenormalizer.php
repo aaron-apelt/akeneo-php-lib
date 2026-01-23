@@ -35,7 +35,7 @@ class ValuesDenormalizer implements DenormalizerInterface
         }
 
         foreach ($data as $attributeCode => $valueArray) {
-            if (! $this->isAttributeCode($attributeCode) && ! $this->isValueArray($valueArray)) {
+            if (! $this->isAttributeCode($attributeCode) || ! $this->isValueArray($valueArray)) {
                 return false;
             }
         }
