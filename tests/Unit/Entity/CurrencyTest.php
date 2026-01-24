@@ -32,3 +32,15 @@ describe('enabled status management', function () {
         expect($currency->isEnabled())->toBeFalse();
     });
 });
+
+describe('label management', function () {
+    it('can get the label (initially null)', function () {
+        $currency = new Currency('USD');
+        expect($currency->getLabel())->toBeNull();
+    });
+
+    it('can set the label', function () {
+        $currency = new Currency('USD')->setLabel('US Dollar');
+        expect($currency->getLabel())->toBe('US Dollar');
+    });
+});
