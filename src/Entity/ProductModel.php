@@ -18,6 +18,20 @@ class ProductModel
 
     private ?string $parent;
 
+    private ?array $associations;
+
+    private ?array $quantifiedAssociations;
+
+    private ?string $created;
+
+    private ?string $updated;
+
+    private ?array $metadata;
+
+    private ?array $qualityScores;
+
+    private ?array $workflowExecutionStatuses;
+
     public function __construct(private string $identifier) {}
 
     public function getIdentifier(): string
@@ -88,6 +102,90 @@ class ProductModel
     public function setParent(?string $parent): self
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getAssociations(): ?array
+    {
+        return $this->associations ?? null;
+    }
+
+    public function setAssociations(?array $associations): self
+    {
+        $this->associations = $associations;
+
+        return $this;
+    }
+
+    public function getQuantifiedAssociations(): ?array
+    {
+        return $this->quantifiedAssociations ?? null;
+    }
+
+    public function setQuantifiedAssociations(?array $quantifiedAssociations): self
+    {
+        $this->quantifiedAssociations = $quantifiedAssociations;
+
+        return $this;
+    }
+
+    public function getCreated(): ?string
+    {
+        return $this->created ?? null;
+    }
+
+    public function setCreated(?string $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function getUpdated(): ?string
+    {
+        return $this->updated ?? null;
+    }
+
+    public function setUpdated(?string $updated): self
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function getMetadata(): ?array
+    {
+        return $this->metadata ?? null;
+    }
+
+    public function setMetadata(?array $metadata): self
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    public function getQualityScores(): ?array
+    {
+        return $this->qualityScores ?? null;
+    }
+
+    public function setQualityScores(?array $qualityScores): self
+    {
+        $this->qualityScores = $qualityScores;
+
+        return $this;
+    }
+
+    public function getWorkflowExecutionStatuses(): ?array
+    {
+        return $this->workflowExecutionStatuses ?? null;
+    }
+
+    public function setWorkflowExecutionStatuses(?array $workflowExecutionStatuses): self
+    {
+        $this->workflowExecutionStatuses = $workflowExecutionStatuses;
 
         return $this;
     }
