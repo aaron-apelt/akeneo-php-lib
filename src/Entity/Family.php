@@ -8,11 +8,17 @@ class Family
 {
     private ?array $labels;
 
+    private ?array $attributes;
+
     private ?string $attributeAsLabel;
 
     private ?string $attributeAsImage;
 
+    private ?string $attributeAsMainMedia;
+
     private ?array $attributeRequirements;
+
+    private ?string $parent;
 
     public function __construct(private string $code) {}
 
@@ -36,6 +42,18 @@ class Family
     public function setLabels(?array $labels): self
     {
         $this->labels = $labels;
+
+        return $this;
+    }
+
+    public function getAttributes(): ?array
+    {
+        return $this->attributes ?? null;
+    }
+
+    public function setAttributes(?array $attributes): self
+    {
+        $this->attributes = $attributes;
 
         return $this;
     }
@@ -64,6 +82,18 @@ class Family
         return $this;
     }
 
+    public function getAttributeAsMainMedia(): ?string
+    {
+        return $this->attributeAsMainMedia ?? null;
+    }
+
+    public function setAttributeAsMainMedia(?string $attributeAsMainMedia): self
+    {
+        $this->attributeAsMainMedia = $attributeAsMainMedia;
+
+        return $this;
+    }
+
     public function getAttributeRequirements(): ?array
     {
         return $this->attributeRequirements ?? null;
@@ -72,6 +102,18 @@ class Family
     public function setAttributeRequirements(?array $attributeRequirements): self
     {
         $this->attributeRequirements = $attributeRequirements;
+
+        return $this;
+    }
+
+    public function getParent(): ?string
+    {
+        return $this->parent ?? null;
+    }
+
+    public function setParent(?string $parent): self
+    {
+        $this->parent = $parent;
 
         return $this;
     }
