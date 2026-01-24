@@ -62,3 +62,39 @@ describe('labels management', function () {
         expect($category->getLabels())->toBeNull();
     });
 });
+
+describe('position management', function () {
+    it('can get the position (initially null)', function () {
+        $category = new Category('cat');
+        expect($category->getPosition())->toBeNull();
+    });
+
+    it('can set the position', function () {
+        $category = new Category('cat')->setPosition(5);
+        expect($category->getPosition())->toBe(5);
+    });
+
+    it('can set the position to null', function () {
+        $category = new Category('cat')->setPosition(10)->setPosition(null);
+        expect($category->getPosition())->toBeNull();
+    });
+});
+
+describe('channel requirements management', function () {
+    it('can get the channel requirements (initially null)', function () {
+        $category = new Category('cat');
+        expect($category->getChannelRequirements())->toBeNull();
+    });
+
+    it('can set the channel requirements', function () {
+        $requirements = ['ecommerce' => ['attribute1', 'attribute2']];
+        $category = new Category('cat')->setChannelRequirements($requirements);
+        expect($category->getChannelRequirements())->toBe($requirements);
+    });
+
+    it('can set the channel requirements to null', function () {
+        $requirements = ['ecommerce' => ['attribute1']];
+        $category = new Category('cat')->setChannelRequirements($requirements)->setChannelRequirements(null);
+        expect($category->getChannelRequirements())->toBeNull();
+    });
+});
