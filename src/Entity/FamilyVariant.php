@@ -10,6 +10,8 @@ class FamilyVariant
 
     private ?array $variantAttributeSets;
 
+    private ?array $commonAttributes;
+
     public function __construct(private string $family, private string $code) {}
 
     public function getFamily(): string
@@ -56,6 +58,18 @@ class FamilyVariant
     public function setVariantAttributeSets(?array $variantAttributeSets): self
     {
         $this->variantAttributeSets = $variantAttributeSets;
+
+        return $this;
+    }
+
+    public function getCommonAttributes(): ?array
+    {
+        return $this->commonAttributes ?? null;
+    }
+
+    public function setCommonAttributes(?array $commonAttributes): self
+    {
+        $this->commonAttributes = $commonAttributes;
 
         return $this;
     }
