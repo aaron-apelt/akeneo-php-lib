@@ -8,6 +8,8 @@ class Asset
 {
     use ValuesTrait;
 
+    private ?string $assetFamilyCode;
+
     public function __construct(private string $code) {}
 
     public function getCode(): string
@@ -18,6 +20,18 @@ class Asset
     public function setCode(string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getAssetFamilyCode(): ?string
+    {
+        return $this->assetFamilyCode ?? null;
+    }
+
+    public function setAssetFamilyCode(?string $assetFamilyCode): self
+    {
+        $this->assetFamilyCode = $assetFamilyCode;
 
         return $this;
     }
