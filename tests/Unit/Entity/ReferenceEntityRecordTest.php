@@ -18,6 +18,30 @@ describe('code management', function () {
     });
 });
 
+describe('created management', function () {
+    it('can get the created timestamp (initially null)', function () {
+        $record = new ReferenceEntityRecord('nike');
+        expect($record->getCreated())->toBeNull();
+    });
+
+    it('can set the created timestamp', function () {
+        $record = new ReferenceEntityRecord('nike')->setCreated('2016-06-23T18:24:44+02:00');
+        expect($record->getCreated())->toBe('2016-06-23T18:24:44+02:00');
+    });
+});
+
+describe('updated management', function () {
+    it('can get the updated timestamp (initially null)', function () {
+        $record = new ReferenceEntityRecord('nike');
+        expect($record->getUpdated())->toBeNull();
+    });
+
+    it('can set the updated timestamp', function () {
+        $record = new ReferenceEntityRecord('nike')->setUpdated('2016-06-25T17:56:12+02:00');
+        expect($record->getUpdated())->toBe('2016-06-25T17:56:12+02:00');
+    });
+});
+
 describe('values management', function () {
     it('can get the values (initially null)', function () {
         $record = new ReferenceEntityRecord('nike');
