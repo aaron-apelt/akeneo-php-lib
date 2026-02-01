@@ -387,7 +387,7 @@ class Attribute
         return $this->isMainIdentifier ?? null;
     }
 
-    public function setIsMainIdentifer(?bool $isMainIdentifier): self
+    public function setIsMainIdentifier(?bool $isMainIdentifier): self
     {
         $this->isMainIdentifier = $isMainIdentifier;
 

@@ -476,17 +476,17 @@ describe('main identifier management', function () {
     });
 
     it('can set main identifier to true', function () {
-        $attribute = new Attribute('sku')->setIsMainIdentifer(true);
+        $attribute = new Attribute('sku')->setIsMainIdentifier(true);
         expect($attribute->isMainIdentifier())->toBeTrue();
     });
 
     it('can set main identifier to false', function () {
-        $attribute = new Attribute('color')->setIsMainIdentifer(false);
+        $attribute = new Attribute('color')->setIsMainIdentifier(false);
         expect($attribute->isMainIdentifier())->toBeFalse();
     });
 
     it('can set main identifier to null', function () {
-        $attribute = new Attribute('sku')->setIsMainIdentifer(true)->setIsMainIdentifer(null);
+        $attribute = new Attribute('sku')->setIsMainIdentifier(true)->setIsMainIdentifier(null);
         expect($attribute->isMainIdentifier())->toBeNull();
     });
 });
