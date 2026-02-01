@@ -10,7 +10,11 @@ class Channel
 
     private ?array $currencies;
 
+    private ?array $locales;
+
     private ?string $categoryTree;
+
+    private ?array $conversionUnits;
 
     public function __construct(private string $code) {}
 
@@ -50,6 +54,18 @@ class Channel
         return $this;
     }
 
+    public function getLocales(): ?array
+    {
+        return $this->locales ?? null;
+    }
+
+    public function setLocales(?array $locales): self
+    {
+        $this->locales = $locales;
+
+        return $this;
+    }
+
     public function getCategoryTree(): ?string
     {
         return $this->categoryTree ?? null;
@@ -58,6 +74,18 @@ class Channel
     public function setCategoryTree(?string $categoryTree): self
     {
         $this->categoryTree = $categoryTree;
+
+        return $this;
+    }
+
+    public function getConversionUnits(): ?array
+    {
+        return $this->conversionUnits ?? null;
+    }
+
+    public function setConversionUnits(?array $conversionUnits): self
+    {
+        $this->conversionUnits = $conversionUnits;
 
         return $this;
     }

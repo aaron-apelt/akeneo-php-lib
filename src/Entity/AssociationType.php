@@ -8,6 +8,10 @@ class AssociationType
 {
     private ?array $labels;
 
+    private ?bool $isTwoWay;
+
+    private ?bool $isQuantified;
+
     public function __construct(private string $code) {}
 
     public function getCode(): string
@@ -30,6 +34,30 @@ class AssociationType
     public function setLabels(?array $labels): self
     {
         $this->labels = $labels;
+
+        return $this;
+    }
+
+    public function isTwoWay(): ?bool
+    {
+        return $this->isTwoWay ?? null;
+    }
+
+    public function setIsTwoWay(?bool $isTwoWay): self
+    {
+        $this->isTwoWay = $isTwoWay;
+
+        return $this;
+    }
+
+    public function isQuantified(): ?bool
+    {
+        return $this->isQuantified ?? null;
+    }
+
+    public function setIsQuantified(?bool $isQuantified): self
+    {
+        $this->isQuantified = $isQuantified;
 
         return $this;
     }

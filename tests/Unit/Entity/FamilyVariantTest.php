@@ -68,3 +68,22 @@ describe('variant attribute sets management', function () {
         expect($variant->getVariantAttributeSets())->toBeNull();
     });
 });
+
+describe('common attributes management', function () {
+    it('can get the common attributes (initially null)', function () {
+        $variant = new FamilyVariant('clothing', 'by_size');
+        expect($variant->getCommonAttributes())->toBeNull();
+    });
+
+    it('can set the common attributes', function () {
+        $attributes = ['name', 'description', 'price'];
+        $variant = new FamilyVariant('clothing', 'by_size')->setCommonAttributes($attributes);
+        expect($variant->getCommonAttributes())->toBe($attributes);
+    });
+
+    it('can set the common attributes to null', function () {
+        $attributes = ['name'];
+        $variant = new FamilyVariant('clothing', 'by_size')->setCommonAttributes($attributes)->setCommonAttributes(null);
+        expect($variant->getCommonAttributes())->toBeNull();
+    });
+});

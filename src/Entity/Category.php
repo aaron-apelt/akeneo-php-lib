@@ -12,6 +12,10 @@ class Category
 
     private ?array $labels;
 
+    private ?int $position;
+
+    private ?array $channelRequirements;
+
     public function __construct(string $code, ?string $parent = null, ?array $labels = null)
     {
         $this->code = $code;
@@ -51,6 +55,30 @@ class Category
     public function setLabels(?array $labels): self
     {
         $this->labels = $labels;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position ?? null;
+    }
+
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getChannelRequirements(): ?array
+    {
+        return $this->channelRequirements ?? null;
+    }
+
+    public function setChannelRequirements(?array $channelRequirements): self
+    {
+        $this->channelRequirements = $channelRequirements;
 
         return $this;
     }

@@ -18,6 +18,23 @@ describe('code management', function () {
     });
 });
 
+describe('asset family management', function () {
+    it('can get the asset family (initially null)', function () {
+        $asset = new Asset('img-001');
+        expect($asset->getAssetFamilyCode())->toBeNull();
+    });
+
+    it('can set the asset family', function () {
+        $asset = new Asset('img-001')->setAssetFamilyCode('packshots');
+        expect($asset->getAssetFamilyCode())->toBe('packshots');
+    });
+
+    it('can set the asset family to null', function () {
+        $asset = new Asset('img-001')->setAssetFamilyCode('packshots')->setAssetFamilyCode(null);
+        expect($asset->getAssetFamilyCode())->toBeNull();
+    });
+});
+
 describe('values management', function () {
     it('can get the values (initially null)', function () {
         $asset = new Asset('img-001');
