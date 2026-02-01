@@ -6,15 +6,15 @@ use AkeneoLib\Entity\ProductModel;
 use AkeneoLib\Entity\Value;
 use AkeneoLib\Entity\Values;
 
-describe('identifier management', function () {
-    it('can get the identifier', function () {
+describe('code management', function () {
+    it('can get the code', function () {
         $model = new ProductModel('tshirt-master');
-        expect($model->getIdentifier())->toBe('tshirt-master');
+        expect($model->getCode())->toBe('tshirt-master');
     });
 
-    it('can set the identifier', function () {
-        $model = new ProductModel('old_id')->setIdentifier('new_id');
-        expect($model->getIdentifier())->toBe('new_id');
+    it('can set the code', function () {
+        $model = new ProductModel('old_id')->setCode('new_id');
+        expect($model->getCode())->toBe('new_id');
     });
 });
 

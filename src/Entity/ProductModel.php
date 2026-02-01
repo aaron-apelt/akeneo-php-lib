@@ -32,16 +32,16 @@ class ProductModel
 
     private ?array $workflowExecutionStatuses;
 
-    public function __construct(private string $identifier) {}
+    public function __construct(private string $code) {}
 
-    public function getIdentifier(): string
+    public function getCode(): string
     {
-        return $this->identifier;
+        return $this->code;
     }
 
-    public function setIdentifier(string $identifier): self
+    public function setCode(string $code): self
     {
-        $this->identifier = $identifier;
+        $this->code = $code;
 
         return $this;
     }
