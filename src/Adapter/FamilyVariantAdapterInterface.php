@@ -37,7 +37,7 @@ interface FamilyVariantAdapterInterface
      *
      * @throws SerializationException if the serialization fails
      */
-    public function all(string $familyCode, ?QueryParameter $queryParameters = null): FluentAdapterResult;
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult;
 
     /**
      * Receives a family variant by a given code and denormalize it to a FamilyVariant object.
@@ -45,7 +45,7 @@ interface FamilyVariantAdapterInterface
      * @throws HttpException if the request failed
      * @throws SerializationException if the serialization fails
      */
-    public function get(string $familyCode, string $code): FamilyVariant;
+    public function get(string $code): FamilyVariant;
 
     /**
      * Adds the family variant to a queue. The queue is only pushed to Akeneo if the
@@ -58,5 +58,15 @@ interface FamilyVariantAdapterInterface
     /**
      * Upsert the normalized family variants from the queue to Akeneo. Call this function after you used stage().
      */
-    public function push(string $familyCode): void;
+    public function push(): void;
+
+    /**
+     * Get the family code for interacting with the variant endpoint.
+     */
+    public function getFamilyCode(): string;
+
+    /**
+     * Set the family code for interacting with the variant endpoint.
+     */
+    public function setFamilyCode(string $familyCode): self;
 }

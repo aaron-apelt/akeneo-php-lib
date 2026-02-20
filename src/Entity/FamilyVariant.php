@@ -12,19 +12,7 @@ class FamilyVariant
 
     private ?array $commonAttributes;
 
-    public function __construct(private string $family, private string $code) {}
-
-    public function getFamily(): string
-    {
-        return $this->family;
-    }
-
-    public function setFamily(string $family): self
-    {
-        $this->family = $family;
-
-        return $this;
-    }
+    public function __construct(private string $code) {}
 
     public function getCode(): string
     {

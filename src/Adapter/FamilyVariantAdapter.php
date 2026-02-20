@@ -17,6 +17,8 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
 {
     private int $batchSize = 100;
 
+    private string $familyCode = '';
+
     private array $familyVariants = [];
 
     /** @var callable|null */
@@ -58,11 +60,11 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function all(string $familyCode, ?QueryParameter $queryParameters = null): FluentAdapterResult
+    public function all(?QueryParameter $queryParameters = null): FluentAdapterResult
     {
         $queryParameters ??= new QueryParameter;
-        $generator = function () use ($familyCode, $queryParameters): Generator {
-            foreach ($this->familyVariantApi->all($familyCode, $this->batchSize, $queryParameters->toArray()) as $variant) {
+        $generator = function () use ($queryParameters): Generator {
+            foreach ($this->familyVariantApi->all($this->familyCode, $this->batchSize, $queryParameters->toArray()) as $variant) {
                 yield $this->serializer->denormalize($variant, FamilyVariant::class);
             }
         };
@@ -73,9 +75,9 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function get(string $familyCode, string $code): FamilyVariant
+    public function get(string $code): FamilyVariant
     {
-        $variant = $this->familyVariantApi->get($familyCode, $code);
+        $variant = $this->familyVariantApi->get($this->familyCode, $code);
 
         return $this->serializer->denormalize($variant, FamilyVariant::class);
     }
@@ -87,21 +89,39 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
     {
         $this->familyVariants[] = $familyVariant;
         if (count($this->familyVariants) >= $this->batchSize) {
-            $this->push($familyVariant->getFamily());
+            $this->push();
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function push(string $familyCode): void
+    public function push(): void
     {
         if (! empty($this->familyVariants)) {
             $normalized = $this->serializer->normalize($this->familyVariants);
-            $response = $this->familyVariantApi->upsertList($familyCode, $normalized);
+            $response = $this->familyVariantApi->upsertList($this->familyCode, $normalized);
             $this->triggerResponseCallback($response, $this->familyVariants);
             $this->familyVariants = [];
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFamilyCode(): string
+    {
+        return $this->familyCode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setFamilyCode(string $familyCode): self
+    {
+        $this->familyCode = $familyCode;
+
+        return $this;
     }
 
     private function triggerResponseCallback(Traversable $response, array $pushedItems): void
