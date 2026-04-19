@@ -13,12 +13,12 @@ use AkeneoLib\Search\QueryParameter;
 interface AssetAdapterInterface
 {
     /**
-     * Get the batch size for upserting product models.
+     * Get the batch size for upserting assets.
      */
     public function getBatchSize(): int;
 
     /**
-     * Set the batch size for upserting product models.
+     * Set the batch size for upserting assets.
      */
     public function setBatchSize(int $batchSize): self;
 

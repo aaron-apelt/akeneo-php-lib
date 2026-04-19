@@ -7,6 +7,7 @@ namespace AkeneoLib\Adapter\Support;
 use InvalidArgumentException;
 use IteratorAggregate;
 use OutOfBoundsException;
+use stdClass;
 use Traversable;
 
 class FluentAdapterResult implements IteratorAggregate
@@ -117,7 +118,7 @@ class FluentAdapterResult implements IteratorAggregate
         return new static($gen());
     }
 
-    public function first(?callable $callback = null)
+    public function first(?callable $callback = null): mixed
     {
         foreach ($this->items as $key => $item) {
             if ($callback === null || $callback($item, $key)) {
@@ -128,7 +129,7 @@ class FluentAdapterResult implements IteratorAggregate
         throw new OutOfBoundsException('No matching item found in FluentAdapterResult.');
     }
 
-    public function last(?callable $callback = null)
+    public function last(?callable $callback = null): mixed
     {
         if (is_array($this->items)) {
             foreach (array_reverse($this->items, true) as $key => $item) {
@@ -140,14 +141,15 @@ class FluentAdapterResult implements IteratorAggregate
             throw new OutOfBoundsException('No matching item found in FluentAdapterResult.');
         }
 
-        $found = null;
+        $notFound = new stdClass;
+        $found = $notFound;
         foreach ($this->items as $key => $item) {
             if ($callback === null || $callback($item, $key)) {
                 $found = $item;
             }
         }
 
-        if ($found === null) {
+        if ($found === $notFound) {
             throw new OutOfBoundsException('No matching item found in FluentAdapterResult.');
         }
 

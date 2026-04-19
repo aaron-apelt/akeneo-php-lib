@@ -9,51 +9,16 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Channel;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class ChannelAdapter implements ChannelAdapterInterface
 {
-    private int $batchSize = 100;
-
-    private array $channels = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
+    use BatchableAdapterTrait;
 
     public function __construct(
         private readonly ChannelApiInterface $channelApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -85,8 +50,8 @@ class ChannelAdapter implements ChannelAdapterInterface
      */
     public function stage(Channel $channel): void
     {
-        $this->channels[] = $channel;
-        if (count($this->channels) >= $this->batchSize) {
+        $this->addPendingItem($channel);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -96,18 +61,11 @@ class ChannelAdapter implements ChannelAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->channels)) {
-            $normalized = $this->serializer->normalize($this->channels);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
             $response = $this->channelApi->upsertList($normalized);
-            $this->triggerResponseCallback($response, $this->channels);
-            $this->channels = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedItems): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedItems, new DateTimeImmutable);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

@@ -9,53 +9,18 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\FamilyVariant;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class FamilyVariantAdapter implements FamilyVariantAdapterInterface
 {
-    private int $batchSize = 100;
+    use BatchableAdapterTrait;
 
     private string $familyCode = '';
-
-    private array $familyVariants = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
 
     public function __construct(
         private readonly FamilyVariantApiInterface $familyVariantApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -87,8 +52,8 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
      */
     public function stage(FamilyVariant $familyVariant): void
     {
-        $this->familyVariants[] = $familyVariant;
-        if (count($this->familyVariants) >= $this->batchSize) {
+        $this->addPendingItem($familyVariant);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -98,11 +63,11 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->familyVariants)) {
-            $normalized = $this->serializer->normalize($this->familyVariants);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
             $response = $this->familyVariantApi->upsertList($this->familyCode, $normalized);
-            $this->triggerResponseCallback($response, $this->familyVariants);
-            $this->familyVariants = [];
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 
@@ -122,12 +87,5 @@ class FamilyVariantAdapter implements FamilyVariantAdapterInterface
         $this->familyCode = $familyCode;
 
         return $this;
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedItems): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedItems, new DateTimeImmutable);
-        }
     }
 }

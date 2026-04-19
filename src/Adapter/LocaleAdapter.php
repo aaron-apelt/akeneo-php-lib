@@ -11,11 +11,11 @@ use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
 use Generator;
 
-class LocaleAdapter implements LocaleAdapterInterface
+readonly class LocaleAdapter implements LocaleAdapterInterface
 {
     public function __construct(
-        private readonly LocaleApiInterface $localeApi,
-        private readonly SerializerInterface $serializer
+        private LocaleApiInterface $localeApi,
+        private SerializerInterface $serializer
     ) {}
 
     /**

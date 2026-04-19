@@ -11,11 +11,11 @@ use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
 use Generator;
 
-class CurrencyAdapter implements CurrencyAdapterInterface
+readonly class CurrencyAdapter implements CurrencyAdapterInterface
 {
     public function __construct(
-        private readonly CurrencyApiInterface $currencyApi,
-        private readonly SerializerInterface $serializer
+        private CurrencyApiInterface $currencyApi,
+        private SerializerInterface $serializer
     ) {}
 
     /**
