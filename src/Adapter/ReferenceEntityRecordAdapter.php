@@ -9,52 +9,18 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\ReferenceEntityRecord;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
 
 class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterface
 {
-    private int $batchSize = 100;
+    use BatchableAdapterTrait;
 
     private string $referenceEntityCode = '';
-
-    private array $referenceEntityRecords = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
 
     public function __construct(
         private readonly ReferenceEntityRecordApiInterface $referenceEntityRecordApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -86,8 +52,8 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
      */
     public function stage(ReferenceEntityRecord $referenceEntityRecord): void
     {
-        $this->referenceEntityRecords[] = $referenceEntityRecord;
-        if (count($this->referenceEntityRecords) >= $this->batchSize) {
+        $this->addPendingItem($referenceEntityRecord);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -97,11 +63,11 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
      */
     public function push(): void
     {
-        if (! empty($this->referenceEntityRecords)) {
-            $normalizedReferenceEntityRecords = $this->serializer->normalize($this->referenceEntityRecords, ['scopeName' => 'channel']);
-            $response = $this->referenceEntityRecordApi->upsertList($this->referenceEntityCode, $normalizedReferenceEntityRecords);
-            $this->triggerResponseCallback($response, $this->referenceEntityRecords);
-            $this->referenceEntityRecords = [];
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems, ['scopeName' => 'channel']);
+            $response = $this->referenceEntityRecordApi->upsertList($this->referenceEntityCode, $normalized);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 
@@ -121,12 +87,5 @@ class ReferenceEntityRecordAdapter implements ReferenceEntityRecordAdapterInterf
         $this->referenceEntityCode = $code;
 
         return $this;
-    }
-
-    private function triggerResponseCallback(array $response, array $pushedReferenceEntityRecords): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedReferenceEntityRecords, new DateTimeImmutable);
-        }
     }
 }

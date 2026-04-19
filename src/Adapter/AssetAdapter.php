@@ -9,52 +9,18 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Asset;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
 
 class AssetAdapter implements AssetAdapterInterface
 {
-    private int $batchSize = 100;
+    use BatchableAdapterTrait;
 
     private string $assetFamilyCode = '';
-
-    private array $assets = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
 
     public function __construct(
         private readonly AssetApiInterface $assetApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -104,8 +70,8 @@ class AssetAdapter implements AssetAdapterInterface
      */
     public function stage(Asset $asset): void
     {
-        $this->assets[] = $asset;
-        if (count($this->assets) >= $this->batchSize) {
+        $this->addPendingItem($asset);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -115,18 +81,11 @@ class AssetAdapter implements AssetAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->assets)) {
-            $normalizedAssets = $this->serializer->normalize($this->assets, ['scopeName' => 'channel']);
-            $response = $this->assetApi->upsertList($this->assetFamilyCode, $normalizedAssets);
-            $this->triggerResponseCallback($response, $this->assets);
-            $this->assets = [];
-        }
-    }
-
-    private function triggerResponseCallback(array $response, array $pushedAssets): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedAssets, new DateTimeImmutable);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems, ['scopeName' => 'channel']);
+            $response = $this->assetApi->upsertList($this->assetFamilyCode, $normalized);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

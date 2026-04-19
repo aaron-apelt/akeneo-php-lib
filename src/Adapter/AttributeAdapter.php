@@ -9,51 +9,16 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Attribute;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class AttributeAdapter implements AttributeAdapterInterface
 {
-    private int $batchSize = 100;
-
-    private array $attributes = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
+    use BatchableAdapterTrait;
 
     public function __construct(
         private readonly AttributeApiInterface $attributeApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -85,8 +50,8 @@ class AttributeAdapter implements AttributeAdapterInterface
      */
     public function stage(Attribute $attribute): void
     {
-        $this->attributes[] = $attribute;
-        if (count($this->attributes) >= $this->batchSize) {
+        $this->addPendingItem($attribute);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -96,18 +61,11 @@ class AttributeAdapter implements AttributeAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->attributes)) {
-            $normalizedAttributes = $this->serializer->normalize($this->attributes);
-            $response = $this->attributeApi->upsertList($normalizedAttributes);
-            $this->triggerResponseCallback($response, $this->attributes);
-            $this->attributes = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedAttributes): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedAttributes, new DateTimeImmutable);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
+            $response = $this->attributeApi->upsertList($normalized);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

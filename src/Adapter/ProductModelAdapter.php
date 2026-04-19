@@ -9,51 +9,16 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\ProductModel;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class ProductModelAdapter implements ProductModelAdapterInterface
 {
-    private int $batchSize = 100;
-
-    private array $productModels = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
+    use BatchableAdapterTrait;
 
     public function __construct(
         private readonly ProductModelApiInterface $productModelApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -85,8 +50,8 @@ class ProductModelAdapter implements ProductModelAdapterInterface
      */
     public function stage(ProductModel $productModel): void
     {
-        $this->productModels[] = $productModel;
-        if (count($this->productModels) >= $this->batchSize) {
+        $this->addPendingItem($productModel);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -96,18 +61,11 @@ class ProductModelAdapter implements ProductModelAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->productModels)) {
-            $normalizedProductModels = $this->serializer->normalize($this->productModels);
-            $response = $this->productModelApi->upsertList($normalizedProductModels);
-            $this->triggerResponseCallback($response, $this->productModels);
-            $this->productModels = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedProductModels): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedProductModels, new DateTimeImmutable);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
+            $response = $this->productModelApi->upsertList($normalized);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

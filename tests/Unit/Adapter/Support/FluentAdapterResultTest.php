@@ -328,13 +328,23 @@ describe('FluentAdapterResult', function () {
             expect(fn () => $result->last(fn ($x) => $x > 10))->toThrow(OutOfBoundsException::class);
         });
 
-        it('throws exception when no items exist in generator', function () {
+        it('throws exception when no matching item found in generator', function () {
             $gen = function () {
-                yield from [];
+                yield from [1, 2, 3];
             };
             $result = new FluentAdapterResult($gen());
 
-            expect(fn () => $result->last())->toThrow(OutOfBoundsException::class);
+            expect(fn () => $result->last(fn ($x) => $x > 10))->toThrow(OutOfBoundsException::class);
+        });
+
+        it('returns null when the last matching item is null', function () {
+            $gen = function () {
+                yield 'a';
+                yield null;
+            };
+            $result = new FluentAdapterResult($gen());
+
+            expect($result->last())->toBeNull();
         });
     });
 

@@ -9,50 +9,18 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AttributeOption;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class AttributeOptionAdapter implements AttributeOptionAdapterInterface
 {
-    private int $batchSize = 100;
+    use BatchableAdapterTrait;
 
     private string $attributeCode = '';
-
-    private array $options = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
 
     public function __construct(
         private readonly AttributeOptionApiInterface $attributeOptionApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -102,8 +70,8 @@ class AttributeOptionAdapter implements AttributeOptionAdapterInterface
      */
     public function stage(AttributeOption $option): void
     {
-        $this->options[] = $option;
-        if (count($this->options) >= $this->batchSize) {
+        $this->addPendingItem($option);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -113,18 +81,11 @@ class AttributeOptionAdapter implements AttributeOptionAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->options)) {
-            $normalized = $this->serializer->normalize($this->options);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
             $response = $this->attributeOptionApi->upsertList($this->attributeCode, $normalized);
-            $this->triggerResponseCallback($response, $this->options);
-            $this->options = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedItems): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedItems, new DateTimeImmutable);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

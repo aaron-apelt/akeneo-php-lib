@@ -9,51 +9,16 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Category;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class CategoryAdapter implements CategoryAdapterInterface
 {
-    private int $batchSize = 100;
-
-    private array $categories = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
+    use BatchableAdapterTrait;
 
     public function __construct(
         private readonly CategoryApiInterface $categoryApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -85,8 +50,8 @@ class CategoryAdapter implements CategoryAdapterInterface
      */
     public function stage(Category $category): void
     {
-        $this->categories[] = $category;
-        if (count($this->categories) >= $this->batchSize) {
+        $this->addPendingItem($category);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -96,18 +61,11 @@ class CategoryAdapter implements CategoryAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->categories)) {
-            $normalizedCategories = $this->serializer->normalize($this->categories);
-            $response = $this->categoryApi->upsertList($normalizedCategories);
-            $this->triggerResponseCallback($response, $this->categories);
-            $this->categories = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedCategories): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedCategories, new DateTimeImmutable);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
+            $response = $this->categoryApi->upsertList($normalized);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

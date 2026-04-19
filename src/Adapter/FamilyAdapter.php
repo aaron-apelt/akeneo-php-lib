@@ -9,51 +9,16 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\Family;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class FamilyAdapter implements FamilyAdapterInterface
 {
-    private int $batchSize = 100;
-
-    private array $families = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
+    use BatchableAdapterTrait;
 
     public function __construct(
         private readonly FamilyApiInterface $familyApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -85,8 +50,8 @@ class FamilyAdapter implements FamilyAdapterInterface
      */
     public function stage(Family $family): void
     {
-        $this->families[] = $family;
-        if (count($this->families) >= $this->batchSize) {
+        $this->addPendingItem($family);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -96,18 +61,11 @@ class FamilyAdapter implements FamilyAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->families)) {
-            $normalizedFamilies = $this->serializer->normalize($this->families);
-            $response = $this->familyApi->upsertList($normalizedFamilies);
-            $this->triggerResponseCallback($response, $this->families);
-            $this->families = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedFamilies): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedFamilies, new DateTimeImmutable);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
+            $response = $this->familyApi->upsertList($normalized);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }

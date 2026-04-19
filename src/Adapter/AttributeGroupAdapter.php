@@ -9,51 +9,16 @@ use AkeneoLib\Adapter\Support\FluentAdapterResult;
 use AkeneoLib\Entity\AttributeGroup;
 use AkeneoLib\Search\QueryParameter;
 use AkeneoLib\Serializer\SerializerInterface;
-use DateTimeImmutable;
 use Generator;
-use Traversable;
 
 class AttributeGroupAdapter implements AttributeGroupAdapterInterface
 {
-    private int $batchSize = 100;
-
-    private array $attributeGroups = [];
-
-    /** @var callable|null */
-    private $responseCallback = null;
+    use BatchableAdapterTrait;
 
     public function __construct(
         private readonly AttributeGroupApiInterface $attributeGroupApi,
         private readonly SerializerInterface $serializer
     ) {}
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBatchSize(): int
-    {
-        return $this->batchSize;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setBatchSize(int $batchSize): self
-    {
-        $this->batchSize = $batchSize;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function onResponse(callable $callback): self
-    {
-        $this->responseCallback = $callback;
-
-        return $this;
-    }
 
     /**
      * {@inheritDoc}
@@ -85,8 +50,8 @@ class AttributeGroupAdapter implements AttributeGroupAdapterInterface
      */
     public function stage(AttributeGroup $attributeGroup): void
     {
-        $this->attributeGroups[] = $attributeGroup;
-        if (count($this->attributeGroups) >= $this->batchSize) {
+        $this->addPendingItem($attributeGroup);
+        if ($this->isPendingBatchFull()) {
             $this->push();
         }
     }
@@ -96,18 +61,11 @@ class AttributeGroupAdapter implements AttributeGroupAdapterInterface
      */
     public function push(): void
     {
-        if (! empty($this->attributeGroups)) {
-            $normalized = $this->serializer->normalize($this->attributeGroups);
+        if ($this->hasPendingItems()) {
+            $normalized = $this->serializer->normalize($this->pendingItems);
             $response = $this->attributeGroupApi->upsertList($normalized);
-            $this->triggerResponseCallback($response, $this->attributeGroups);
-            $this->attributeGroups = [];
-        }
-    }
-
-    private function triggerResponseCallback(Traversable $response, array $pushedItems): void
-    {
-        if ($this->responseCallback !== null) {
-            call_user_func($this->responseCallback, $response, $pushedItems, new DateTimeImmutable);
+            $this->triggerResponseCallback($response, $this->pendingItems);
+            $this->clearPendingItems();
         }
     }
 }
